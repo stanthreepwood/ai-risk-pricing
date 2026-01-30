@@ -1,0 +1,35 @@
+[project]
+name = "ai-risk-pricing"
+version = "0.1.0"
+description = "AI Catastrophe Risk Model for Insurance Pricing"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "pydantic>=2.5.0",
+    "numpy>=1.26.0",
+    "scipy>=1.11.0",
+    "pandas>=2.1.0",
+    "networkx>=3.2.0",
+    "matplotlib>=3.8.0",
+]
+
+[project.scripts]
+ai-risk-pricing = "ai_risk_pricing.main:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["ai_risk_pricing"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "N", "W"]
+
+[tool.mypy]
+python_version = "3.11"
+strict = true

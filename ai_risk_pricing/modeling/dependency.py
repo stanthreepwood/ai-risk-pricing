@@ -236,8 +236,8 @@ class DependencyGraph:
                     current_loss
                     * base_propagation
                     * edge_weight
-                    * downstream_node.dependency_weight
-                    * amplification
+                    #* downstream_node.dependency_weight
+                    #* amplification
                 )
                 
                 # Apply criticality multiplier
@@ -249,7 +249,6 @@ class DependencyGraph:
                 # Accumulate loss at downstream node
                 node_losses[downstream] = node_losses.get(downstream, 0.0) + propagated
                 queue.append(downstream)
-                breakpoint()
         
         return node_losses
     

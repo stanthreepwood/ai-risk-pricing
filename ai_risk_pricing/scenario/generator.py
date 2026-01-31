@@ -5,6 +5,7 @@ Provides both random scenario generation for exploratory analysis and
 predefined frontier AI scenarios calibrated through expert judgment.
 """
 
+from ai_risk_pricing.scenario.data.known_knowns_generator import known_knowns_scenarios
 import numpy as np
 from typing import Sequence
 
@@ -326,17 +327,10 @@ class ScenarioGenerator:
             },
         )
     
-    def get_all_scenarios(self, include_dark: bool = False) -> list[Scenario]:
-        """
-        Return all predefined scenarios, optionally including dark scenario.
-        
-        Args:
-            include_dark: Whether to include the extreme tail scenario.
-        
-        Returns:
-            Complete list of scenarios for simulation.
-        """
+    def get_all_scenarios(self, include_known_knowns: bool = True, include_dark: bool = False) -> list[Scenario]:
         scenarios = self.get_predefined_scenarios()
         if include_dark:
             scenarios.append(self.get_dark_scenario())
+        if include_known_knowns:
+            scenarios.extend(known_knowns_scenarios)
         return scenarios

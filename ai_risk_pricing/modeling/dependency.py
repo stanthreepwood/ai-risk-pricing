@@ -18,19 +18,6 @@ class Node:
     
     Represents an entity in the AI supply chain with exposure and
     connectivity characteristics that determine loss propagation.
-    
-    Actuarial interpretation:
-        Each node is a potential loss source or transmission point.
-        Exposure determines base loss potential.
-        Dependency weight determines loss transmission from upstream.
-        Criticality affects loss amplification.
-    
-    Attributes:
-        name: Unique node identifier.
-        node_type: Category (foundation_model, saas_provider, enterprise).
-        exposure: Base exposure value in $M (maximum potential loss).
-        dependency_weight: Proportion of upstream loss absorbed (0-1).
-        criticality_score: System criticality multiplier (1.0 = normal).
     """
     
     name: str
@@ -52,16 +39,15 @@ class DependencyGraph:
     Losses propagate from upstream to downstream, amplified by
     concentration and criticality.
     
-    Actuarial interpretation:
-        In traditional cat modeling, dependency structures capture
-        correlation in losses (e.g., multiple buildings in same
-        earthquake zone). For AI, the dependency is functional:
-        if a foundation model fails, all dependent services fail.
-        
-        The graph structure enables modeling of:
-        - Concentration risk (many nodes depend on few providers)
-        - Cascade failures (upstream failure propagates down)
-        - Systemic risk (correlated losses across portfolio)
+    In traditional cat modeling, dependency structures capture
+    correlation in losses (e.g., multiple buildings in same
+    earthquake zone). For AI, the dependency is functional:
+    if a foundation model fails, all dependent services fail.
+    
+    The graph structure enables modeling of:
+    - Concentration risk (many nodes depend on few providers)
+    - Cascade failures (upstream failure propagates down)
+    - Systemic risk (correlated losses across portfolio)
     """
     
     def __init__(self) -> None:
@@ -128,14 +114,9 @@ class DependencyGraph:
         concentration based on the share of downstream dependencies
         held by each foundation model.
         
-        Actuarial interpretation:
-            High concentration (HHI close to 1) means losses are highly
-            correlated - a single point of failure affects most of the
-            portfolio. Low concentration means risks are diversified.
-        
-        Returns:
-            Concentration index between 0 (perfect diversification)
-            and 1 (perfect concentration).
+        High concentration (HHI close to 1) means losses are highly
+        correlated - a single point of failure affects most of the
+        portfolio. Low concentration means risks are diversified.
         """
         foundation_models = self.get_nodes_by_type("foundation_model")
         if not foundation_models:
@@ -175,26 +156,8 @@ class DependencyGraph:
         based on concentration risk. The propagation is NOT purely linear -
         concentration amplifies losses nonlinearly.
         
-        Actuarial interpretation:
-            When a foundation model fails, dependent services absorb
-            a portion of the loss. High concentration (few providers
-            serving many enterprises) amplifies total loss because:
-            1. More nodes are affected
-            2. Lack of alternatives increases business interruption
-            3. Systemic nature prevents hedging
-        
         The nonlinear amplification term (1 + HHI^exponent) captures
         the "super-linear" growth of systemic risk with concentration.
-        
-        Args:
-            root_node: Name of the node where loss originates.
-            root_loss: Initial loss amount at root node.
-            base_propagation: Base proportion of loss transmitted (0-1).
-            concentration_exponent: Exponent for concentration amplification.
-            max_amplification: Cap on total amplification factor.
-        
-        Returns:
-            Dictionary mapping node names to their loss amounts.
         """
         if root_node not in self._nodes:
             raise ValueError(f"Unknown root node: {root_node}")
@@ -236,8 +199,8 @@ class DependencyGraph:
                     current_loss
                     * base_propagation
                     * edge_weight
-                    #* downstream_node.dependency_weight
-                    #* amplification
+                    * downstream_node.dependency_weight
+                    * amplification
                 )
                 
                 # Apply criticality multiplier

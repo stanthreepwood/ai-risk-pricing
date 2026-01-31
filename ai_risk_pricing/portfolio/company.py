@@ -91,15 +91,9 @@ class Portfolio:
     """
     Collection of companies representing the insured portfolio.
     
-    Actuarial interpretation:
-        The portfolio is the book of business being priced. Total
-        portfolio exposure determines capital requirements and
-        premium volume. Portfolio composition affects risk metrics
-        through correlation and concentration effects.
-    
-    Attributes:
-        name: Portfolio identifier.
-        companies: List of companies in the portfolio.
+    Total portfolio exposure determines capital requirements and
+    premium volume. Portfolio composition affects risk metrics
+    through correlation and concentration effects.
     """
     
     name: str
@@ -124,9 +118,6 @@ class Portfolio:
         
         Sum of individual company exposures. This is the theoretical
         maximum loss if all companies were fully affected.
-        
-        Returns:
-            Total exposure in $M.
         """
         return sum(c.exposure for c in self.companies)
     
@@ -172,9 +163,6 @@ class Portfolio:
     def summary(self) -> dict:
         """
         Generate portfolio summary statistics.
-        
-        Returns:
-            Dictionary of portfolio metrics.
         """
         if not self.companies:
             return {"error": "Empty portfolio"}
@@ -202,17 +190,10 @@ class Portfolio:
         
         Generates a diverse portfolio with varying sizes, AI dependencies,
         and risk profiles for demonstration and testing.
-        
-        Args:
-            n_companies: Number of companies to generate.
-            seed: Random seed for reproducibility.
-        
-        Returns:
-            Populated portfolio instance.
         """
         rng = np.random.default_rng(seed)
         
-        # Define sector profiles (sector: (base_revenue, ai_dep_mean, autonomy_mean, safety_mean))
+        # TODO: unmock sector profiles (sector: (base_revenue, ai_dep_mean, autonomy_mean, safety_mean))
         sector_profiles = {
             "technology": (500, 0.8, 0.6, 0.7),
             "financial_services": (800, 0.7, 0.4, 0.75),

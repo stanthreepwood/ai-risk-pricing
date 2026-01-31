@@ -1,48 +1,35 @@
-"""
-AI Catastrophe Model - Main Entry Point.
 
-Executes a complete catastrophe model run:
-1. Build a sample portfolio of insured companies
-2. Generate catastrophe scenarios (predefined frontier AI scenarios)
-3. Construct the AI supply chain dependency graph
-4. Run Monte Carlo simulation (100,000 years)
-5. Calculate risk metrics (EL, VaR, TVaR)
-6. Compute technical premium with ambiguity loading
-7. Generate exceedance probability curve
-
-This script demonstrates a miniature reinsurance-style catastrophe model
-for AI risks, producing outputs similar to those used in actual cat modeling.
-"""
-
-import sys
 import time
 from pathlib import Path
 
+import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
 from .config import ModelConfig, DEFAULT_CONFIG
 from .scenario import ScenarioGenerator
 from .modeling import MonteCarloEngine, DependencyGraph
+from .modeling.monte_carlo import SimulationResult
 from .portfolio import Company, Portfolio, PortfolioAggregator
 from .pricing import RiskMetrics, PremiumCalculator
-from .visualization import ExceedanceCurve
+from .visualization import (
+    ExceedanceCurve,
+    compute_concentration_index,
+    export_gexf,
+    export_graphml,
+    export_png,
+    plot_aep,
+    plot_oep,
+    plot_return_period,
+    plot_ruin_probability,
+    compute_tvar_contributions,
+    plot_sensitivity_tornado,
+    save_figure,
+)
 
 
 def build_sample_portfolio(n_companies: int = 15, seed: int = 42) -> Portfolio:
-    """
-    Build a diverse sample portfolio of companies with AI exposure.
-    
-    Creates a realistic portfolio with varying company sizes, sectors,
-    and AI risk characteristics for demonstration.
-    
-    Args:
-        n_companies: Number of companies to generate.
-        seed: Random seed for reproducibility.
-    
-    Returns:
-        Populated Portfolio instance.
-    """
+
     print(f"Building portfolio with {n_companies} companies...")
     
     portfolio = Portfolio.build_sample_portfolio(n_companies=n_companies, seed=seed)
@@ -78,26 +65,12 @@ def generate_scenarios(include_dark: bool = False, seed: int = 42) -> list:
     
     print(f"  Generated {len(scenarios)} scenarios:")
     for s in scenarios:
-        print(f"    - {s.name} (λ={s.base_frequency:.3f}, {s.severity_distribution.name})")
+        print(f"    - {s.name} (lambda={s.base_frequency:.3f}, {s.severity_distribution.name})")
     
     return scenarios
 
 
 def build_dependency_graph(portfolio: Portfolio) -> DependencyGraph:
-    """
-    Build the AI supply chain dependency graph.
-    
-    Creates a three-tier graph structure:
-    - Foundation models (upstream)
-    - SaaS providers (middle tier)
-    - Enterprises from portfolio (downstream)
-    
-    Args:
-        portfolio: Portfolio to incorporate into graph.
-    
-    Returns:
-        Populated DependencyGraph instance.
-    """
     print("\nBuilding dependency graph...")
     
     aggregator = PortfolioAggregator(portfolio)
@@ -119,22 +92,7 @@ def run_simulation(
     graph: DependencyGraph,
     config: ModelConfig,
     n_years: int = 100_000,
-) -> pd.DataFrame:
-    """
-    Execute Monte Carlo simulation.
-    
-    Runs the core simulation engine to generate a Year Loss Table
-    by simulating many years of potential losses.
-    
-    Args:
-        scenarios: List of catastrophe scenarios.
-        graph: Dependency graph for loss propagation.
-        config: Model configuration.
-        n_years: Number of simulation years.
-    
-    Returns:
-        Year Loss Table DataFrame.
-    """
+) -> SimulationResult:
     print(f"\nRunning Monte Carlo simulation ({n_years:,} years)...")
     
     start_time = time.time()
@@ -155,22 +113,10 @@ def run_simulation(
     print(f"  Mean annual loss: ${result.metadata['mean_annual_loss']:,.2f}M")
     print(f"  Maximum loss: ${result.metadata['max_annual_loss']:,.2f}M")
     
-    return result.year_loss_table
+    return result
 
 
 def calculate_risk_metrics(ylt: pd.DataFrame, total_exposure: float) -> RiskMetrics:
-    """
-    Calculate risk metrics from Year Loss Table.
-    
-    Computes standard actuarial risk measures including EL, VaR, and TVaR.
-    
-    Args:
-        ylt: Year Loss Table from simulation.
-        total_exposure: Total portfolio exposure.
-    
-    Returns:
-        RiskMetrics instance with computed values.
-    """
     print("\nCalculating risk metrics...")
     
     metrics = RiskMetrics(ylt)
@@ -188,17 +134,6 @@ def calculate_risk_metrics(ylt: pd.DataFrame, total_exposure: float) -> RiskMetr
 
 
 def calculate_premium(metrics: RiskMetrics, total_exposure: float, config: ModelConfig) -> None:
-    """
-    Calculate and display technical premium.
-    
-    Computes premium using the ambiguity-loaded pricing formula
-    appropriate for AI catastrophe risks without historical data.
-    
-    Args:
-        metrics: RiskMetrics instance with loss statistics.
-        total_exposure: Total portfolio exposure.
-        config: Model configuration with pricing parameters.
-    """
     print("\nCalculating technical premium...")
     
     calculator = PremiumCalculator(
@@ -216,17 +151,6 @@ def plot_exceedance_curve(
     output_dir: Path | None = None,
     show: bool = True,
 ) -> None:
-    """
-    Generate and display exceedance probability curve.
-    
-    Creates a professional-quality EP curve visualization with
-    key return period markers.
-    
-    Args:
-        ylt: Year Loss Table from simulation.
-        output_dir: Directory to save plot (optional).
-        show: Whether to display the plot interactively.
-    """
     print("\nGenerating exceedance curve...")
     
     curve = ExceedanceCurve(ylt, title="AI Catastrophe Risk - Exceedance Probability Curve")
@@ -264,19 +188,6 @@ def main(
     show_plot: bool = True,
     seed: int = 42,
 ) -> None:
-    """
-    Execute complete AI catastrophe model run.
-    
-    This is the main entry point that orchestrates the full model workflow.
-    
-    Args:
-        n_companies: Number of companies in portfolio.
-        n_years: Number of simulation years.
-        dark_mode: Whether to include extreme tail scenario.
-        output_dir: Directory for output files (optional).
-        show_plot: Whether to display plots interactively.
-        seed: Random seed for reproducibility.
-    """
     print("=" * 70)
     print("AI CATASTROPHE MODEL")
     print("Reinsurance-Style Risk Pricing Engine")
@@ -301,33 +212,101 @@ def main(
         print("\n*** DARK SCENARIO MODE ENABLED ***")
         print("    Extreme tail events will be injected into simulation")
     
-    # Step 1: Build portfolio
     portfolio = build_sample_portfolio(n_companies=n_companies, seed=seed)
     
-    # Step 2: Generate scenarios
     scenarios = generate_scenarios(include_dark=dark_mode, seed=seed)
     
-    # Step 3: Build dependency graph
     graph = build_dependency_graph(portfolio)
+
+    systemic_risk_score = compute_concentration_index(graph.graph)
+    print(f"\nSystemic Risk Score (H): {systemic_risk_score:.6f}")
+
+    output_path = Path(output_dir) if output_dir else None
+    if output_path:
+        output_path.mkdir(parents=True, exist_ok=True)
+        graph_dir = output_path / "graph"
+        export_graphml(graph.graph, graph_dir / "dependency_graph.graphml")
+        export_gexf(graph.graph, graph_dir / "dependency_graph.gexf")
+        export_png(graph.graph, graph_dir / "dependency_graph.png")
+        print(f"  Exported dependency graph to: {graph_dir}")
     
-    # Step 4: Run simulation
-    ylt = run_simulation(
+    sim_result = run_simulation(
         scenarios=scenarios,
         graph=graph,
         config=config,
         n_years=n_years,
     )
+    ylt = sim_result.year_loss_table
     
-    # Step 5: Calculate risk metrics
     total_exposure = portfolio.total_exposure
     metrics = calculate_risk_metrics(ylt, total_exposure)
     
-    # Step 6: Calculate premium
     calculate_premium(metrics, total_exposure, config)
     
-    # Step 7: Plot exceedance curve
-    output_path = Path(output_dir) if output_dir else None
     plot_exceedance_curve(ylt, output_dir=output_path, show=show_plot)
+
+    print("\nGenerating actuarial reporting plots...")
+    losses = ylt["loss"].to_numpy(dtype=float)
+
+    # OEP approximation: max scenario contribution per year (occurrence proxy)
+    oep_losses = losses
+    if sim_result.scenario_losses:
+        scenario_matrix = np.vstack([arr for arr in sim_result.scenario_losses.values()])
+        if scenario_matrix.size > 0:
+            oep_losses = scenario_matrix.max(axis=0)
+
+    fig_aep = plot_aep(losses)
+    fig_oep = plot_oep(oep_losses)
+    fig_rp = plot_return_period(losses)
+
+    # Capital adequacy grid anchored to tail losses
+    cap_max = float(np.quantile(losses, 0.999) * 1.25) if np.any(losses > 0) else 1.0
+    capital_range = np.linspace(0.0, max(1.0, cap_max), 60)
+    fig_ruin = plot_ruin_probability(losses, capital_range)
+
+    # TVaR contribution by scenario
+    if sim_result.scenario_losses:
+        loss_df = pd.DataFrame({"year": ylt["year"]})
+        for scenario_name, arr in sim_result.scenario_losses.items():
+            loss_df[scenario_name] = arr
+        loss_long = loss_df.melt(id_vars=["year"], var_name="scenario", value_name="loss")
+        _contrib_df, fig_tvar = compute_tvar_contributions(loss_long)
+    else:
+        fig_tvar = None
+        print("  Skipping TVaR contribution plot (scenario breakdown unavailable).")
+
+    #sensitivity tornado
+    sensitivity_years = min(n_years, 25_000)
+    tornado_df, fig_tornado = plot_sensitivity_tornado(
+        scenarios=scenarios,
+        dependency_graph=graph,
+        config=config,
+        n_years=sensitivity_years,
+        seed=seed,
+    )
+
+    if output_path:
+        plots_dir = output_path / "actuarial_plots"
+        save_figure(fig_aep, plots_dir / "aep.png")
+        save_figure(fig_oep, plots_dir / "oep.png")
+        save_figure(fig_rp, plots_dir / "return_period.png")
+        save_figure(fig_ruin, plots_dir / "capital_adequacy_ruin_probability.png")
+        if fig_tvar is not None:
+            save_figure(fig_tvar, plots_dir / "tvar_contributions.png")
+        save_figure(fig_tornado, plots_dir / "tvar_sensitivity_tornado.png")
+        tornado_df.to_csv(plots_dir / "tvar_sensitivity_tornado.csv", index=False)
+        print(f"  Saved actuarial plots to: {plots_dir}")
+
+    if show_plot:
+        plt.show()
+    else:
+        plt.close(fig_aep)
+        plt.close(fig_oep)
+        plt.close(fig_rp)
+        plt.close(fig_ruin)
+        if fig_tvar is not None:
+            plt.close(fig_tvar)
+        plt.close(fig_tornado)
     
     print("\n" + "=" * 70)
     print("MODEL RUN COMPLETE")
@@ -367,9 +346,10 @@ def cli() -> None:
         help="Directory for output files",
     )
     parser.add_argument(
-        "--no-plot",
+        "--show-plots",
         action="store_true",
-        help="Disable interactive plot display",
+        default=False,
+        help="Show interactive plot display",
     )
     parser.add_argument(
         "--seed",
@@ -385,7 +365,7 @@ def cli() -> None:
         n_years=args.years,
         dark_mode=args.dark_mode,
         output_dir=args.output_dir,
-        show_plot=not args.no_plot,
+        show_plot=args.show_plots,
         seed=args.seed,
     )
 

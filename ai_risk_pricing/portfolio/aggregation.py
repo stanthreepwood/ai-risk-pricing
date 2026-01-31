@@ -153,17 +153,9 @@ class PortfolioAggregator:
         Used when we have a portfolio-level loss and need to attribute
         it back to individual companies for analysis.
         
-        Actuarial interpretation:
-            Loss allocation is needed for per-policy pricing and for
-            understanding which parts of the portfolio drive total loss.
-            Exposure-weighted allocation is standard in cat modeling.
-        
-        Args:
-            total_loss: Total portfolio loss to allocate.
-            allocation_method: How to distribute loss ("exposure_weighted" or "equal").
-        
-        Returns:
-            Dictionary mapping company names to allocated losses.
+        Loss allocation is needed for per-policy pricing and for
+        understanding which parts of the portfolio drive total loss.
+        Exposure-weighted allocation is standard in cat modeling.
         """
         if allocation_method == "equal":
             per_company = total_loss / len(self.portfolio.companies)

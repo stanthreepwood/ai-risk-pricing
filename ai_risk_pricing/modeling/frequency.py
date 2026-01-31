@@ -19,11 +19,10 @@ class FrequencyModel:
     year. The Poisson distribution is standard in catastrophe modeling because
     it assumes events occur independently at a constant rate over time.
     
-    Actuarial interpretation:
-        - Lambda (λ) represents the expected annual event count
-        - P(N=k) = (λ^k * e^-λ) / k! gives probability of k events
-        - For rare events (λ << 1), most years have zero events
-        - The Poisson assumption implies events are independent
+    - Lambda (λ) represents the expected annual event count
+    - P(N=k) = (λ^k * e^-λ) / k! gives probability of k events
+    - For rare events (λ << 1), most years have zero events
+    - The Poisson assumption implies events are independent
     
     Future extensions could include:
         - Non-homogeneous Poisson (time-varying intensity)
@@ -47,19 +46,9 @@ class FrequencyModel:
         This is the core frequency sampling function. Given an annual
         event rate, returns the realized number of events for one year.
         
-        Actuarial interpretation:
-            - lambda_ = 0.1 → expect 1 event per 10 years, most years 0
-            - lambda_ = 1.0 → expect 1 event per year on average
-            - lambda_ = 0.01 → 1-in-100 year event frequency
-        
-        Args:
-            lambda_: Annual expected event count (Poisson intensity).
-        
-        Returns:
-            Number of events in the simulation year.
-        
-        Raises:
-            ValueError: If lambda_ is negative.
+        - lambda_ = 0.1 → expect 1 event per 10 years, most years 0
+        - lambda_ = 1.0 → expect 1 event per year on average
+        - lambda_ = 0.01 → 1-in-100 year event frequency
         """
         if lambda_ < 0:
             raise ValueError(f"Lambda must be non-negative, got {lambda_}")
@@ -70,19 +59,9 @@ class FrequencyModel:
         """
         Sample event counts for multiple simulation years (vectorized).
         
-        Efficiently generates event counts for an entire simulation run.
+        Generates event counts for an entire simulation run.
         This is the preferred method for Monte Carlo simulation due to
         vectorization efficiency.
-        
-        Args:
-            lambda_: Annual expected event count (Poisson intensity).
-            n_years: Number of simulation years.
-        
-        Returns:
-            Array of event counts, one per simulation year.
-        
-        Raises:
-            ValueError: If lambda_ is negative or n_years is non-positive.
         """
         if lambda_ < 0:
             raise ValueError(f"Lambda must be non-negative, got {lambda_}")
@@ -103,17 +82,9 @@ class FrequencyModel:
         is a simulation year. This enables vectorized simulation across
         all scenarios simultaneously.
         
-        Actuarial interpretation:
-            In a multi-peril catastrophe model, we simulate multiple
-            event types (earthquake, hurricane, etc.) simultaneously.
-            For AI risk, each scenario type has its own frequency.
-        
-        Args:
-            lambdas: List of annual frequencies, one per scenario.
-            n_years: Number of simulation years.
-        
-        Returns:
-            Array of shape (n_scenarios, n_years) with event counts.
+        In a multi-peril catastrophe model, we simulate multiple
+        event types (earthquake, hurricane, etc.) simultaneously.
+        For AI risk, each scenario type has its own frequency.
         """
         n_scenarios = len(lambdas)
         counts = np.zeros((n_scenarios, n_years), dtype=np.int64)
@@ -129,12 +100,6 @@ class FrequencyModel:
         
         For a Poisson distribution, E[N] = λ. This is useful for
         analytical validation and reporting.
-        
-        Args:
-            lambda_: Annual expected event count.
-        
-        Returns:
-            Expected annual event count (equals lambda).
         """
         return lambda_
     
@@ -145,12 +110,6 @@ class FrequencyModel:
         P(N >= 1) = 1 - P(N = 0) = 1 - e^(-λ)
         
         This is useful for reporting event probabilities in intuitive terms.
-        
-        Args:
-            lambda_: Annual expected event count.
-        
-        Returns:
-            Probability of at least one event occurring.
         """
         return 1.0 - np.exp(-lambda_)
     
@@ -161,16 +120,9 @@ class FrequencyModel:
         Return period T means "1 event every T years on average."
         λ = 1/T
         
-        Actuarial interpretation:
-            A "1-in-100 year event" has return period T=100 and λ=0.01.
-            This does NOT mean exactly one event per 100 years, but that
-            the probability of an event in any given year is 1%.
-        
-        Args:
-            return_period: Average time between events in years.
-        
-        Returns:
-            Poisson intensity (lambda) corresponding to return period.
+        A "1-in-100 year event" has return period T=100 and λ=0.01.
+        This does NOT mean exactly one event per 100 years, but that
+        the probability of an event in any given year is 1%.
         """
         if return_period <= 0:
             raise ValueError(f"Return period must be positive, got {return_period}")
@@ -181,12 +133,6 @@ class FrequencyModel:
         Convert a Poisson intensity to a return period.
         
         T = 1/λ
-        
-        Args:
-            lambda_: Annual expected event count.
-        
-        Returns:
-            Return period in years.
         """
         if lambda_ <= 0:
             raise ValueError(f"Lambda must be positive for return period, got {lambda_}")
@@ -201,10 +147,9 @@ class NonHomogeneousPoissonModel(FrequencyModel):
     changes over time (e.g., increasing AI capability leading to
     increasing risk frequency).
     
-    Actuarial interpretation:
-        In climate modeling, hurricane frequency may increase over time.
-        Similarly, AI catastrophe frequency may increase as systems
-        become more capable and more widely deployed.
+    In climate modeling, hurricane frequency may increase over time.
+    Similarly, AI catastrophe frequency may increase as systems
+    become more capable and more widely deployed.
     """
     
     def __init__(
@@ -215,11 +160,6 @@ class NonHomogeneousPoissonModel(FrequencyModel):
     ) -> None:
         """
         Initialize non-homogeneous Poisson model.
-        
-        Args:
-            base_lambda: Starting annual intensity.
-            trend_rate: Annual growth rate in intensity (e.g., 0.05 for 5% growth).
-            rng: NumPy random generator for reproducibility.
         """
         super().__init__(rng)
         self.base_lambda = base_lambda
@@ -230,12 +170,6 @@ class NonHomogeneousPoissonModel(FrequencyModel):
         Calculate intensity at a specific future year.
         
         Uses exponential growth: λ(t) = λ_0 * exp(r * t)
-        
-        Args:
-            year: Years from now (0 = current year).
-        
-        Returns:
-            Poisson intensity at the specified year.
         """
         return self.base_lambda * np.exp(self.trend_rate * year)
     
@@ -244,12 +178,6 @@ class NonHomogeneousPoissonModel(FrequencyModel):
         Sample event counts with time-varying intensity.
         
         Each year uses its own intensity based on the trend model.
-        
-        Args:
-            n_years: Number of simulation years.
-        
-        Returns:
-            Array of event counts with time-varying frequency.
         """
         counts = np.zeros(n_years, dtype=np.int64)
         for year in range(n_years):

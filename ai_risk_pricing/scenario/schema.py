@@ -1,11 +1,3 @@
-"""
-Scenario schema definitions for AI catastrophe events.
-
-Defines the data structures representing catastrophe scenarios. Each scenario
-encapsulates the characteristics of a potential AI failure mode, including
-its frequency, severity distribution, and propagation behavior.
-"""
-
 from dataclasses import dataclass, field
 from enum import Enum
 from typing import Any
@@ -103,25 +95,9 @@ class Scenario:
     
     A scenario represents a specific type of AI failure event with all
     parameters needed for stochastic simulation. Scenarios are the primary
-    input to the Monte Carlo engine.
-    
-    Actuarial interpretation:
-        The scenario defines both the frequency (how often events occur)
-        and severity (how large losses are when events occur) components
-        of the compound frequency-severity model used in catastrophe pricing.
-    
-    Attributes:
-        name: Human-readable scenario identifier.
-        event_type: Classification of the failure mode.
-        trigger: Description of what initiates the scenario.
-        propagation_vector: How losses spread through the system.
-        affected_nodes: List of dependency graph nodes impacted.
-        base_frequency: Annual expected event count (Poisson lambda).
-        severity_distribution: Specification for loss sampling.
-        tail_multiplier: Factor applied to extreme tail losses.
-        capability_threshold: Capability score triggering regime switch.
-        threshold_multiplier: Severity multiplier when threshold exceeded.
-        metadata: Optional additional scenario information.
+    input to the Monte Carlo engine. 
+    Both the frequency (how often events occur) and severity 
+    (how large losses are when events occur) components of the compound frequency-severity model used in catastrophe pricing.
     """
     
     name: str
@@ -185,5 +161,4 @@ class Scenario:
         return self.base_frequency * mean_severity
 
 
-# Avoid circular import by importing numpy only where needed
 import numpy as np

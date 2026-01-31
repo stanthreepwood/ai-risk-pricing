@@ -1,11 +1,3 @@
-"""
-Distribution sampling utilities for stochastic catastrophe modeling.
-
-This module provides vectorized sampling functions for the probability
-distributions used in frequency-severity modeling. All functions are
-designed for high-throughput Monte Carlo simulation.
-"""
-
 import numpy as np
 from numpy.typing import NDArray
 
@@ -18,21 +10,9 @@ def sample_poisson(lambda_: float, size: int = 1, rng: np.random.Generator | Non
     of events occurring in a fixed time period (typically one year). The
     parameter lambda represents the expected annual frequency of events.
     
-    Actuarial interpretation:
-        - lambda = 0.1 means roughly 1 event per 10 years on average
-        - lambda = 2.0 means roughly 2 events per year on average
-        - The Poisson assumption implies events occur independently
-    
-    Args:
-        lambda_: Expected number of events (annual frequency). Must be >= 0.
-        size: Number of samples to draw (simulation years).
-        rng: NumPy random generator for reproducibility.
-    
-    Returns:
-        Array of event counts for each simulation period.
-    
-    Raises:
-        ValueError: If lambda_ is negative.
+    - lambda = 0.1 means roughly 1 event per 10 years on average
+    - lambda = 2.0 means roughly 2 events per year on average
+    - The Poisson assumption implies events occur independently
     """
     if lambda_ < 0:
         raise ValueError(f"Poisson lambda must be non-negative, got {lambda_}")
@@ -56,12 +36,11 @@ def sample_pareto(
     its heavy tail. It captures the empirical observation that loss severity
     follows a power law: extreme losses are rare but disproportionately large.
     
-    Actuarial interpretation:
-        - alpha (shape): Controls tail heaviness. Lower alpha = heavier tail.
-            - alpha < 1: Infinite mean (extremely heavy tail)
-            - alpha < 2: Infinite variance (heavy tail, finite mean)
-            - alpha > 2: Finite variance (moderate tail)
-        - scale (x_m): Minimum possible loss (threshold parameter)
+    - alpha (shape): Controls tail heaviness. Lower alpha = heavier tail.
+    - alpha < 1: Infinite mean (extremely heavy tail)
+    - alpha < 2: Infinite variance (heavy tail, finite mean)
+    - alpha > 2: Finite variance (moderate tail)
+    - scale (x_m): Minimum possible loss (threshold parameter)
     
     For AI catastrophe risks, alpha ~ 1.5 reflects extreme uncertainty
     about tail behavior given the absence of historical loss data.
@@ -71,12 +50,6 @@ def sample_pareto(
         scale: Scale parameter (minimum loss). Must be > 0.
         size: Number of samples to draw.
         rng: NumPy random generator for reproducibility.
-    
-    Returns:
-        Array of sampled loss values.
-    
-    Raises:
-        ValueError: If alpha or scale are non-positive.
     """
     if alpha <= 0:
         raise ValueError(f"Pareto alpha must be positive, got {alpha}")
@@ -86,7 +59,7 @@ def sample_pareto(
     if rng is None:
         rng = np.random.default_rng()
     
-    # NumPy's pareto returns (Pareto - 1), so we adjust
+    # numpy's pareto returns (Pareto - 1), so we adjust
     # Standard Pareto: X = scale / U^(1/alpha) where U ~ Uniform(0,1)
     return (rng.pareto(a=alpha, size=size) + 1) * scale
 
@@ -104,28 +77,15 @@ def sample_lognormal(
     loss severity. It produces right-skewed distributions where the log
     of losses is normally distributed.
     
-    Actuarial interpretation:
-        - mu: Mean of the underlying normal distribution (log-scale)
-        - sigma: Standard deviation of the underlying normal (log-scale)
-        - Higher sigma produces heavier tails and more extreme events
-        - The mean of the lognormal is exp(mu + sigma²/2)
-        - The median is exp(mu)
+    - mu: Mean of the underlying normal distribution (log-scale)
+    - sigma: Standard deviation of the underlying normal (log-scale)
+    - Higher sigma produces heavier tails and more extreme events
+    - The mean of the lognormal is exp(mu + sigma²/2)
+    - The median is exp(mu)
     
     For AI risks, lognormal may be preferred over Pareto when moderate
     tail behavior is appropriate (e.g., operational errors vs. systemic
     failures).
-    
-    Args:
-        mu: Mean of the log of the distribution.
-        sigma: Standard deviation of the log. Must be > 0.
-        size: Number of samples to draw.
-        rng: NumPy random generator for reproducibility.
-    
-    Returns:
-        Array of sampled loss values.
-    
-    Raises:
-        ValueError: If sigma is non-positive.
     """
     if sigma <= 0:
         raise ValueError(f"Lognormal sigma must be positive, got {sigma}")
@@ -154,12 +114,6 @@ def sample_from_distribution(
         params: Dictionary of distribution parameters.
         size: Number of samples to draw.
         rng: NumPy random generator for reproducibility.
-    
-    Returns:
-        Array of sampled loss values.
-    
-    Raises:
-        ValueError: If distribution name is not supported.
     
     Examples:
         >>> sample_from_distribution("pareto", {"alpha": 1.5, "scale": 10}, size=1000)

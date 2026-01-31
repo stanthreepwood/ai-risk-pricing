@@ -135,13 +135,9 @@ class ScenarioGenerator:
         far exceeding the standard distribution to test portfolio resilience
         against tail risks.
         
-        Actuarial note:
-            This scenario should be analyzed separately from the main
-            distribution. It represents a "what-if" stress test rather
-            than a probability-weighted expected outcome.
-        
-        Returns:
-            Extreme tail catastrophe scenario.
+        This scenario should be analyzed separately from the main
+        distribution. It represents a "what-if" stress test rather
+        than a probability-weighted expected outcome.
         """
         return Scenario(
             name="Dark Scenario: Cascading AI Collapse",

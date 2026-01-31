@@ -1,10 +1,3 @@
-"""
-Monte Carlo simulation engine for AI catastrophe modeling.
-
-This is the core simulation engine that combines frequency, severity,
-and dependency models to generate Year Loss Tables (YLT).
-"""
-
 import numpy as np
 import pandas as pd
 from dataclasses import dataclass
@@ -21,12 +14,6 @@ from ..config import ModelConfig, DEFAULT_CONFIG
 class SimulationResult:
     """
     Container for Monte Carlo simulation results.
-    
-    Attributes:
-        year_loss_table: DataFrame with columns [year, loss] containing
-            aggregate annual losses.
-        scenario_losses: Optional detailed breakdown by scenario.
-        metadata: Simulation parameters and diagnostics.
     """
     
     year_loss_table: pd.DataFrame
@@ -44,12 +31,11 @@ class MonteCarloEngine:
     3. Propagating losses through the dependency graph
     4. Aggregating annual portfolio losses
     
-    Actuarial interpretation:
-        Monte Carlo simulation is the standard method for catastrophe
-        pricing when analytical solutions are intractable. By simulating
-        many years (typically 10,000-100,000), we build an empirical
-        distribution of annual losses that can be used for pricing
-        and capital calculations.
+    Monte Carlo simulation is the standard method for catastrophe
+    pricing when analytical solutions are intractable. By simulating
+    many years (typically 10,000-100,000), we build an empirical
+    distribution of annual losses that can be used for pricing
+    and capital calculations.
     
     The resulting Year Loss Table (YLT) is the fundamental output of
     catastrophe models, showing the distribution of possible annual losses.
@@ -62,27 +48,15 @@ class MonteCarloEngine:
         config: ModelConfig = DEFAULT_CONFIG,
         seed: int | None = None,
     ) -> None:
-        """
-        Initialize the Monte Carlo engine.
-        
-        Args:
-            scenarios: List of catastrophe scenarios to simulate.
-            dependency_graph: Graph defining loss propagation structure.
-            config: Model configuration parameters.
-            seed: Random seed for reproducibility.
-        """
         self.scenarios = list(scenarios)
         self.dependency_graph = dependency_graph
         self.config = config
         
-        # Initialize random generator
         self.rng = np.random.default_rng(seed or config.random_seed)
         
-        # Initialize component models with shared RNG
         self.frequency_model = FrequencyModel(rng=self.rng)
         self.severity_model = SeverityModel(rng=self.rng)
         
-        # Pre-calculate scenario parameters for vectorization
         self._scenario_lambdas = np.array([s.base_frequency for s in self.scenarios])
     
     def simulate_year(self) -> tuple[float, dict[str, float]]:
@@ -109,7 +83,7 @@ class MonteCarloEngine:
                 scenario_losses[scenario.name] = 0.0
                 continue
             
-            # Sample severities for all events
+            # sample severities for all events
             severities = self.severity_model.sample_full_scenario(
                 dist_name=scenario.severity_distribution.name,
                 params=scenario.severity_distribution.params,
@@ -120,13 +94,11 @@ class MonteCarloEngine:
                 size=n_events,
             )
             
-            # Propagate each event through dependency graph
+            # propagate each event through dependency graph
             scenario_total = 0.0
             for severity in severities:
-                # Determine root node based on scenario type
                 root_node = self._get_root_node(scenario)
                 
-                # Propagate through dependency graph
                 propagated_loss = self.dependency_graph.total_propagated_loss(
                     root_node=root_node,
                     root_loss=severity,
@@ -152,21 +124,13 @@ class MonteCarloEngine:
         This is the main entry point for simulation. Generates a complete
         Year Loss Table by simulating many independent years.
         
-        Actuarial interpretation:
-            Each simulated year represents one possible realization of
-            annual losses. The collection of simulated years forms an
-            empirical distribution that approximates the true (unknown)
-            loss distribution.
-            
-            More simulation years → more stable estimates, especially
-            for tail metrics like VaR 99.5%.
+        Each simulated year represents one possible realization of
+        annual losses. The collection of simulated years forms an
+        empirical distribution that approximates the true (unknown)
+        loss distribution.
         
-        Args:
-            n_years: Number of years to simulate (default from config).
-            show_progress: Whether to print progress updates.
-        
-        Returns:
-            SimulationResult containing Year Loss Table and metadata.
+        More simulation years → more stable estimates, especially
+        for tail metrics like VaR 99.5%.
         """
         n_years = n_years or self.config.simulation_years
         
@@ -283,7 +247,7 @@ class MonteCarloEngine:
             scenario_losses_arr[scenario.name] = scenario_year_losses
             annual_losses += scenario_year_losses
         
-        # Build Year Loss Table
+        # year loss table
         ylt = pd.DataFrame({
             "year": np.arange(1, n_years + 1),
             "loss": annual_losses,
@@ -319,37 +283,26 @@ class MonteCarloEngine:
         by standard simulation. This method adds their contribution to
         an existing YLT.
         
-        Actuarial interpretation:
-            Dark scenarios are stress tests overlaid on the base
-            distribution. They represent "what-if" extreme events
-            that warrant separate capital consideration.
-        
-        Args:
-            dark_scenario: The extreme tail scenario to inject.
-            ylt: Existing Year Loss Table to modify.
-        
-        Returns:
-            Modified YLT with dark scenario losses added.
+        Dark scenarios are stress tests overlaid on the base
+        distribution. They represent "what-if" extreme events
+        that warrant separate capital consideration.
         """
         n_years = len(ylt)
         
-        # Sample dark scenario occurrences (very rare)
         dark_events = self.frequency_model.sample_event_counts(
             dark_scenario.base_frequency,
             n_years,
         )
         
-        # Find years with dark events
         dark_years = np.where(dark_events > 0)[0]
         
-        # Sample and propagate dark scenario losses
         for year_idx in dark_years:
             n_events = dark_events[year_idx]
             
             severities = self.severity_model.sample_full_scenario(
                 dist_name=dark_scenario.severity_distribution.name,
                 params=dark_scenario.severity_distribution.params,
-                capability_score=0.9,  # Assume high capability for dark scenario
+                capability_score=self._get_capability_score(dark_scenario),
                 threshold=dark_scenario.capability_threshold,
                 threshold_multiplier=dark_scenario.threshold_multiplier,
                 tail_multiplier=dark_scenario.tail_multiplier,
@@ -368,7 +321,6 @@ class MonteCarloEngine:
                 for sev in severities
             )
             
-            # Add to existing loss
             ylt.loc[year_idx, "loss"] += dark_loss
         
         return ylt
@@ -379,14 +331,7 @@ class MonteCarloEngine:
         
         For now, returns a default based on scenario type.
         Future versions could use time-varying capability scores.
-        
-        Args:
-            scenario: The scenario to get capability for.
-        
-        Returns:
-            Capability score between 0 and 1.
         """
-        # Higher capability for dark scenarios and alignment failures
         if scenario.is_dark_scenario:
             return 0.9
         elif scenario.event_type.value == "alignment_failure":
@@ -400,30 +345,19 @@ class MonteCarloEngine:
         
         Different scenario types originate at different points in the
         dependency graph.
-        
-        Args:
-            scenario: The scenario to find root node for.
-        
-        Returns:
-            Name of the root node in the dependency graph.
         """
-        # Check affected nodes from scenario
         affected = scenario.affected_nodes
         
-        # Prioritize foundation models as root (upstream failures cascade)
         if "foundation_model" in affected:
             fm_nodes = self.dependency_graph.get_nodes_by_type("foundation_model")
             if fm_nodes:
-                # Return the most critical foundation model
                 return max(fm_nodes, key=lambda n: n.criticality_score).name
         
-        # Fall back to SaaS providers
         if "saas_provider" in affected:
             saas_nodes = self.dependency_graph.get_nodes_by_type("saas_provider")
             if saas_nodes:
                 return max(saas_nodes, key=lambda n: n.criticality_score).name
         
-        # Default to first available node
         enterprise_nodes = self.dependency_graph.get_nodes_by_type("enterprise")
         if enterprise_nodes:
             return enterprise_nodes[0].name

@@ -1,5 +1,3 @@
-"""Visualization tools for catastrophe model outputs."""
-
 from .exceedance import ExceedanceCurve
 from .graph_export import export_gexf, export_graphml, export_png, compute_concentration_index
 from .complementary_plots import (

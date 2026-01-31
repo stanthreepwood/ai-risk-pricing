@@ -1,14 +1,30 @@
+from __future__ import annotations
+
 from dataclasses import dataclass, field
 from enum import Enum
 from typing import Any
 
 
+class NodeLayer(str, Enum):
+    """
+    Layers of the AI dependency graph.
+    """
+    
+    FOUNDATION_MODEL = "foundation_model"
+    """Foundation models are the root nodes of the dependency graph."""
+    
+    SaaS_PROVIDER = "saas_provider"
+    """SaaS providers are the middle nodes of the dependency graph."""
+    
+    ENTERPRISE = "enterprise"
+    """Enterprises are the leaf nodes of the dependency graph."""
+
+    ISOLATED_NODE = "isolated_node"
+    """Isolated nodes are nodes that are not connected to any other nodes."""
+
 class EventType(str, Enum):
     """
     Classification of AI catastrophe event types.
-    
-    Each event type represents a distinct failure mode with different
-    risk characteristics, propagation patterns, and severity profiles.
     """
     
     SYSTEMIC_FAILURE = "systemic_failure"
@@ -107,6 +123,8 @@ class Scenario:
     affected_nodes: list[str]
     base_frequency: float
     severity_distribution: SeverityDistribution
+    severity_materialization: float | None = None
+    legal_frameworks: dict | None = None
     tail_multiplier: float = 1.0
     capability_threshold: float = 0.7
     threshold_multiplier: float = 3.0
@@ -161,4 +179,5 @@ class Scenario:
         return self.base_frequency * mean_severity
 
 
+from ai_risk_pricing.utils.severity_by_framework import SupportedFrameworks
 import numpy as np

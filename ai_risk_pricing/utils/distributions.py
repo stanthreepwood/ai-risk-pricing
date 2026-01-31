@@ -1,6 +1,9 @@
 import numpy as np
 from numpy.typing import NDArray
 
+import math
+import statistics
+
 
 def sample_poisson(lambda_: float, size: int = 1, rng: np.random.Generator | None = None) -> NDArray[np.int64]:
     """
@@ -88,6 +91,7 @@ def sample_lognormal(
     failures).
     """
     if sigma <= 0:
+        return np.full(size, 0)
         raise ValueError(f"Lognormal sigma must be positive, got {sigma}")
     
     if rng is None:
@@ -140,3 +144,17 @@ def sample_from_distribution(
             f"Unsupported distribution: {dist_name}. "
             f"Supported: 'pareto', 'lognormal'"
         )
+
+def fit_lognormal_mom(severities: list[float]) -> tuple[str, dict[str, float]]:
+    """Fit lognormal parameters via moment matching to positive severities."""
+    x = [float(s) for s in severities if math.isfinite(float(s)) and float(s) > 0.0]
+    if len(x) == 0:
+        raise ValueError("Cannot fit severity: no positive finite severities.")
+
+    m = float(statistics.fmean(x))
+    v = float(statistics.variance(x)) if len(x) > 1 else 0.0
+    # Lognormal moment relations: m = exp(mu + s^2/2), v = (exp(s^2)-1)*exp(2mu+s^2)
+    sigma2 = float(math.log1p(v / (m * m))) if m > 0 else 0.0
+    sigma = float(math.sqrt(max(sigma2, 0.0)))
+    mu = float(math.log(m) - 0.5 * sigma2)
+    return "lognormal", {"mu": mu, "sigma": sigma}

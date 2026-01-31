@@ -6,6 +6,7 @@ predefined frontier AI scenarios calibrated through expert judgment.
 """
 
 from ai_risk_pricing.scenario.data.known_knowns_generator import known_knowns_scenarios
+from ai_risk_pricing.scenario.data.known_knowns_parameter_estimation import create_aggregated_scenarios
 import numpy as np
 from typing import Sequence
 
@@ -328,5 +329,5 @@ class ScenarioGenerator:
         if include_dark:
             scenarios.append(self.get_dark_scenario())
         if include_known_knowns:
-            scenarios.extend(known_knowns_scenarios)
+            scenarios.extend(create_aggregated_scenarios(known_knowns_scenarios))
         return scenarios

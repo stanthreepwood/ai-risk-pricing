@@ -1,23 +1,25 @@
-from typing import Literal, Mapping
+from __future__ import annotations
+
+from typing import Literal
 
 SeverityLevel = Literal["low", "medium", "high"]
+SupportedFrameworks = Literal["ProductLiability", "DSA", "AIAct"]
 
-
-FRAMEWORK_SEVERITY: dict[str, dict[SeverityLevel, float]] = {
+FRAMEWORK_SEVERITY: dict[SupportedFrameworks, dict[SeverityLevel, float]] = {
     "ProductLiability": {
-        "low": 1000000,
-        "medium": 2000000,
-        "high": 3000000,
+        "low": 1,
+        "medium": 2,
+        "high": 3,
     },
     "DSA": {
-        "low": 1000000,
-        "medium": 2000000,
-        "high": 3000000,
+        "low": 1,
+        "medium": 2,
+        "high": 3,
     },
     "AIAct": {
-        "low": 1000000,
-        "medium": 2000000,
-        "high": 3000000,
+        "low": 1,
+        "medium": 2,
+        "high": 3,
     },
 }
 
@@ -28,7 +30,7 @@ FRAMEWORK_INTERACTIONS: dict[frozenset[str], float] = {
 }
 
 
-def severity_by_framework(framework_levels: Mapping[str, SeverityLevel]) -> float:
+def severity_by_framework(framework_levels: dict[str, SeverityLevel]) -> float:
     """Return a combined severity level implied by multiple frameworks.
 
     Actuarial meaning: this maps each applicable legal / regulatory framework to a

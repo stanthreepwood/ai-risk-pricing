@@ -2,6 +2,7 @@
 import time
 from pathlib import Path
 
+from ai_risk_pricing.visualization.complementary_plots import plot_exceedance_curve
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
@@ -10,15 +11,13 @@ from .config import ModelConfig, DEFAULT_CONFIG
 from .scenario import ScenarioGenerator
 from .modeling import MonteCarloEngine, DependencyGraph
 from .modeling.monte_carlo import SimulationResult
-from .portfolio import Company, Portfolio, PortfolioAggregator
+from .portfolio import Portfolio, PortfolioAggregator
 from .pricing import RiskMetrics, PremiumCalculator
 from .visualization import (
-    ExceedanceCurve,
     compute_concentration_index,
     export_gexf,
     export_graphml,
     export_png,
-    plot_aep,
     plot_oep,
     plot_return_period,
     plot_ruin_probability,
@@ -146,40 +145,6 @@ def calculate_premium(metrics: RiskMetrics, total_exposure: float, config: Model
     print(calculator.report())
 
 
-def plot_exceedance_curve(
-    ylt: pd.DataFrame,
-    output_dir: Path | None = None,
-    show: bool = True,
-) -> None:
-    print("\nGenerating exceedance curve...")
-    
-    curve = ExceedanceCurve(ylt, title="AI Catastrophe Risk - Exceedance Probability Curve")
-    
-    # Print return period table
-    rp_table = curve.return_period_table()
-    print("\nReturn Period Table:")
-    print(rp_table.to_string(index=False))
-    
-    # Determine save path
-    save_path = None
-    if output_dir:
-        output_dir = Path(output_dir)
-        output_dir.mkdir(parents=True, exist_ok=True)
-        save_path = str(output_dir / "exceedance_curve.png")
-    
-    # Generate plot
-    curve.plot(
-        figsize=(11, 8),
-        show_return_periods=True,
-        return_periods=[10, 50, 100, 200],
-        save_path=save_path,
-        show=show,
-    )
-    
-    if save_path:
-        print(f"\n  Saved plot to: {save_path}")
-
-
 def main(
     n_companies: int = 15,
     n_years: int = 100_000,
@@ -243,7 +208,7 @@ def main(
     
     calculate_premium(metrics, total_exposure, config)
     
-    plot_exceedance_curve(ylt, output_dir=output_path, show=show_plot)
+    fig_exceedance = plot_exceedance_curve(ylt, show=show_plot)
 
     print("\nGenerating actuarial reporting plots...")
     losses = ylt["loss"].to_numpy(dtype=float)
@@ -255,7 +220,6 @@ def main(
         if scenario_matrix.size > 0:
             oep_losses = scenario_matrix.max(axis=0)
 
-    fig_aep = plot_aep(losses)
     fig_oep = plot_oep(oep_losses)
     fig_rp = plot_return_period(losses)
 
@@ -286,8 +250,9 @@ def main(
     )
 
     if output_path:
-        plots_dir = output_path / "actuarial_plots"
-        save_figure(fig_aep, plots_dir / "aep.png")
+        plots_dir = output_path / "plots"
+        plots_dir.mkdir(parents=True, exist_ok=True)
+        save_figure(fig_exceedance, plots_dir / "exceedance_curve.png")
         save_figure(fig_oep, plots_dir / "oep.png")
         save_figure(fig_rp, plots_dir / "return_period.png")
         save_figure(fig_ruin, plots_dir / "capital_adequacy_ruin_probability.png")
@@ -300,7 +265,7 @@ def main(
     if show_plot:
         plt.show()
     else:
-        plt.close(fig_aep)
+        plt.close(fig_exceedance)
         plt.close(fig_oep)
         plt.close(fig_rp)
         plt.close(fig_ruin)

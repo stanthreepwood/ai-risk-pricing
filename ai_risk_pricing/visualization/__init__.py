@@ -2,8 +2,7 @@
 
 from .exceedance import ExceedanceCurve
 from .graph_export import export_gexf, export_graphml, export_png, compute_concentration_index
-from .actuarial_plots import (
-    plot_aep,
+from .complementary_plots import (
     plot_oep,
     plot_return_period,
     plot_ruin_probability,
@@ -18,7 +17,6 @@ __all__ = [
     "export_gexf",
     "export_png",
     "compute_concentration_index",
-    "plot_aep",
     "plot_oep",
     "plot_return_period",
     "plot_ruin_probability",

@@ -183,10 +183,10 @@ class ExceedanceCurve:
         
         plt.tight_layout()
         
-        if save_path:
-            fig.savefig(save_path, dpi=150, bbox_inches="tight", facecolor="white")
-        if show:
-            plt.show()
+        #if save_path:
+        #    fig.savefig(save_path, dpi=150, bbox_inches="tight", facecolor="white")
+        #if show:
+        #    plt.show()
         
         return fig
     

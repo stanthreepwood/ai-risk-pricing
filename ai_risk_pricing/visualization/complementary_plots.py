@@ -2,6 +2,7 @@ from dataclasses import replace
 from pathlib import Path
 from typing import Sequence
 
+from ai_risk_pricing.visualization import ExceedanceCurve
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
@@ -77,47 +78,41 @@ def _format_currency_millions(x: float, _pos: int) -> str:
     return f"${x:,.0f}M"
 
 
-def plot_aep(losses: Sequence[float] | np.ndarray, *, title: str = "Aggregate Exceedance Probability (AEP)") -> Figure:
-    """
-    Plot Aggregate Exceedance Probability (AEP) curve.
+def plot_exceedance_curve(
+    ylt: pd.DataFrame,
+    output_dir: Path | None = None,
+    title: str = "AI Catastrophe Risk - Exceedance Probability Curve",
+    show: bool = True,
+    xlabel: str = "Annual Aggregate Loss ($M)",
+    filename: str = "exceedance_curve.png",
+) -> None:
+    print(f"\nGenerating {title}...")
+    
+    curve = ExceedanceCurve(ylt, title=title)
+    
+    # Print return period table
+    rp_table = curve.return_period_table()
+    print("\nReturn Period Table:")
+    print(rp_table.to_string(index=False))
+    
 
-    AEP is the probability that *annual aggregate* portfolio loss exceeds
-    a threshold. This is the standard curve used for pricing layers,
-    setting attachment points, and communicating tail risk.
+    fig = curve.plot(
+        figsize=(11, 8),
+        show_return_periods=True,
+        return_periods=[10, 50, 100, 200],
+        show=show,
+    )
+    
+    ax = fig.axes[0]
+    ax.set_xlabel(xlabel)
 
-    Method:
-        - Sort annual losses (descending)
-        - Compute exceedance probability using plotting positions
-        - Use log scale on X (loss), institutional styling
-    """
-    _apply_institutional_style()
-    x, p = _ep_from_losses(losses)
-
-    fig, ax = plt.subplots(figsize=(11, 7))
-    ax.plot(x, p, color=_INSTITUTIONAL_BLUE, linewidth=2.4)
-    ax.fill_between(x, p, color=_INSTITUTIONAL_BLUE, alpha=0.10)
-
-    ax.set_xscale("log")
-    ax.set_ylabel("Annual Exceedance Probability")
-    ax.set_xlabel("Annual Aggregate Loss")
-    ax.set_title(title)
-    ax.yaxis.set_major_formatter(PercentFormatter(xmax=1.0))
-    ax.xaxis.set_major_formatter(FuncFormatter(_format_currency_millions))
-    ax.grid(True, which="major")
-    ax.grid(True, which="minor", linestyle=":", alpha=0.5)
-
-    # Focus on meaningful domain: ignore zeros for log scale
-    positive = x[x > 0]
-    if len(positive) > 0:
-        ax.set_xlim(left=max(1.0, float(np.min(positive)) * 0.8), right=float(np.max(positive)) * 1.05)
-    ax.set_ylim(bottom=max(1.0 / (len(x) + 1), 1e-6), top=1.0)
-
-    fig.tight_layout()
     return fig
+
 
 
 def plot_oep(
     event_losses: pd.DataFrame | Sequence[float] | np.ndarray,
+    show: bool = True,
     *,
     title: str = "Occurrence Exceedance Probability (OEP)",
 ) -> Figure:
@@ -139,9 +134,13 @@ def plot_oep(
     else:
         losses = np.asarray(event_losses, dtype=float)
 
-    fig = plot_aep(losses, title=title)
-    ax = fig.axes[0]
-    ax.set_xlabel("Annual Maximum Event Loss")
+    fig = plot_exceedance_curve(
+        pd.DataFrame({"loss": losses}),
+        title=title,
+        xlabel="Annual Maximum Event Loss ($M)",
+        filename="oep.png",
+        show=show,
+    )
     return fig
 
 

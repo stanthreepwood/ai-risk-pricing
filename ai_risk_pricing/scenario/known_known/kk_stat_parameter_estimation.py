@@ -5,7 +5,7 @@ import math
 import statistics
 from typing import Iterable
 
-from ai_risk_pricing.scenario.data.known_knowns_generator import known_knowns_scenarios
+from ai_risk_pricing.scenario.known_known.kk_dummy_llm import known_knowns_scenarios
 from ai_risk_pricing.scenario.schema import (
     EventType,
     Scenario,

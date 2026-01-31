@@ -1,5 +1,3 @@
-"""Core stochastic modeling components for frequency, severity, and dependencies."""
-
 from .frequency import FrequencyModel
 from .severity import SeverityModel
 from .dependency import DependencyGraph

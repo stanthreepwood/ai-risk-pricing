@@ -1,14 +1,6 @@
-"""
-Scenario generation for AI catastrophe modeling.
-
-Provides both random scenario generation for exploratory analysis and
-predefined frontier AI scenarios calibrated through expert judgment.
-"""
-
-from ai_risk_pricing.scenario.data.known_knowns_generator import known_knowns_scenarios
-from ai_risk_pricing.scenario.data.known_knowns_parameter_estimation import create_aggregated_scenarios
+from ai_risk_pricing.scenario.known_known.kk_dummy_llm import known_knowns_scenarios
+from ai_risk_pricing.scenario.known_known.kk_stat_parameter_estimation import create_aggregated_scenarios
 import numpy as np
-from typing import Sequence
 
 from .schema import (
     Scenario,

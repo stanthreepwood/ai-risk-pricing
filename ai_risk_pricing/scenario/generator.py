@@ -151,6 +151,12 @@ class ScenarioGenerator:
             tail_multiplier=5.0,
             capability_threshold=0.5,
             threshold_multiplier=10.0,
+            known_mitigations={
+                "gateway": 0.3,
+                "monitoring": 0.2,
+                "model_governance": 0.2,
+                "evals": 0.2,
+            },
             metadata={
                 "description": "Extreme tail stress test scenario",
                 "return_period_target": 1000,
@@ -184,6 +190,11 @@ class ScenarioGenerator:
             tail_multiplier=1.5,
             capability_threshold=0.8,
             threshold_multiplier=3.0,
+            known_mitigations={
+                "gateway": 0.6,
+                "monitoring": 0.4,
+                "model_governance": 0.3,
+            },
             metadata={
                 "historical_analogue": "Major cloud provider outages",
                 "concentration_concern": "High - few providers dominate",
@@ -215,6 +226,12 @@ class ScenarioGenerator:
             tail_multiplier=2.0,
             capability_threshold=0.7,
             threshold_multiplier=2.5,
+            known_mitigations={
+                "prompt_injection": 0.7,
+                "gateway": 0.5,
+                "monitoring": 0.3,
+                "access_control": 0.4,
+            },
             metadata={
                 "historical_analogue": "NotPetya, SolarWinds",
                 "trend": "Increasing with AI capability growth",
@@ -247,6 +264,16 @@ class ScenarioGenerator:
             tail_multiplier=3.0,
             capability_threshold=0.6,
             threshold_multiplier=5.0,  # High multiplier - more capable = more risk
+            known_mitigations={
+                # Output filtering catches harmful outputs
+                "output_filtering": 0.6,
+                # Evals can detect misalignment pre-deployment
+                "evals": 0.5,
+                # Monitoring enables detection and shutdown
+                "monitoring": 0.4,
+                # Model governance for rollback
+                "model_governance": 0.3,
+            },
             metadata={
                 "no_historical_analogue": True,
                 "tail_concern": "Extreme - potential for catastrophic harm",
@@ -277,8 +304,14 @@ class ScenarioGenerator:
                 params={"mu": 3.5, "sigma": 1.5},
             ),
             tail_multiplier=1.2,
-            capability_threshold=0.9,  # Only triggers at very high capability
+            capability_threshold=0.9,
             threshold_multiplier=2.0,
+            known_mitigations={
+                "model_governance": 0.5,
+                "evals": 0.4,
+                "monitoring": 0.3,
+                "access_control": 0.3,
+            },
             metadata={
                 "historical_analogue": "GDPR implementation, China algorithm rules",
                 "trend": "Increasing regulatory attention globally",
@@ -311,6 +344,12 @@ class ScenarioGenerator:
             tail_multiplier=2.5,
             capability_threshold=0.7,
             threshold_multiplier=3.5,
+            known_mitigations={
+                "data_quality": 0.8,
+                "evals": 0.4,
+                "model_governance": 0.5,
+                "monitoring": 0.3,
+            },
             metadata={
                 "historical_analogue": "SolarWinds, XZ Utils",
                 "detection_lag": "Potentially months to years",

@@ -1,7 +1,13 @@
+from __future__ import annotations
+
 from dataclasses import dataclass, field
-from typing import Iterator
+from typing import Iterator, TYPE_CHECKING
 import numpy as np
 from enum import Enum
+
+if TYPE_CHECKING:
+    from ai_risk_pricing.safety.measure import SafetyProfile
+
 
 class Sector(str, Enum):
     """
@@ -23,26 +29,46 @@ class Company:
     - AI dependency (how reliant operations are on AI)
     - Autonomy level (degree of autonomous AI decision-making)
     - Safety score (quality of AI risk management)
+    
+    The safety_profile field provides detailed safety posture via SafetyMeasure
+    instances. When present, the safety_score property uses profile.overall_score
+    for backwards compatibility. Legacy usage with _legacy_safety_score is supported.
     """
     
     name: str
     revenue: float
     ai_dependency_score: float
     autonomy_level: float
-    safety_score: float
+    _legacy_safety_score: float = 0.0
     sector: Sector = Sector.TECHNOLOGY
+    safety_profile: SafetyProfile | None = None
     metadata: dict = field(default_factory=dict)
     
     def __post_init__(self) -> None:
         if self.revenue < 0:
             raise ValueError(f"Revenue must be non-negative, got {self.revenue}")
         
-        for attr_name in ["ai_dependency_score", "autonomy_level", "safety_score"]:
+        for attr_name in ["ai_dependency_score", "autonomy_level", "_legacy_safety_score"]:
             value = getattr(self, attr_name)
             if not 0 <= value <= 1:
                 raise ValueError(
                     f"{attr_name} must be in [0, 1], got {value}"
                 )
+    
+    @property
+    def safety_score(self) -> float:
+        """
+        Get the company's overall safety score.
+        
+        If a SafetyProfile is attached, uses profile.overall_score.
+        Otherwise, returns the legacy _legacy_safety_score value.
+        
+        Returns:
+            Safety score in [0, 1] where higher is better.
+        """
+        if self.safety_profile is not None:
+            return self.safety_profile.overall_score
+        return self._legacy_safety_score
     
     @property
     def exposure(self) -> float:
@@ -231,7 +257,7 @@ class Portfolio:
                 revenue=revenue,
                 ai_dependency_score=ai_dependency,
                 autonomy_level=autonomy,
-                safety_score=safety,
+                _legacy_safety_score=safety,
                 sector=Sector(sector),
             )
             portfolio.add_company(company)

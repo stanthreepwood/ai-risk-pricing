@@ -1,0 +1,284 @@
+metadata:
+  version: "1.0"
+  last_updated: "2026-01"
+  notes: "Scores are indicative estimates for modeling purposes. Actual effectiveness depends on implementation quality and integration."
+
+risk_surfaces:
+
+  prompt_injection:
+    description: "Detection and prevention of prompt injection attacks"
+    providers:
+      - name: "Lakera Guard"
+        effectiveness: 0.85
+        tier: "enterprise"
+        notes: "Real-time API, low latency, comprehensive attack detection"
+      - name: "PromptArmor"
+        effectiveness: 0.80
+        tier: "enterprise"
+        notes: "Enterprise-focused prompt security"
+      - name: "Rebuff"
+        effectiveness: 0.70
+        tier: "open_source"
+        notes: "Self-hosted option available"
+      - name: "LLM Guard"
+        effectiveness: 0.72
+        tier: "open_source"
+        notes: "Comprehensive input/output scanning"
+      - name: "NeMo Guardrails"
+        effectiveness: 0.75
+        tier: "open_source"
+        notes: "NVIDIA, programmable conversation rails"
+      - name: "Custom"
+        effectiveness: 0.50
+        tier: "custom"
+        notes: "Default for in-house solutions"
+      - name: "Other"
+        effectiveness: 0.40
+        tier: "other"
+
+  gateway:
+    description: "AI gateway for traffic control, rate limiting, routing"
+    providers:
+      - name: "Portkey"
+        effectiveness: 0.82
+        tier: "enterprise"
+        notes: "Full-featured AI gateway with observability"
+      - name: "Helicone"
+        effectiveness: 0.78
+        tier: "enterprise"
+        notes: "Focus on observability and cost management"
+      - name: "LiteLLM"
+        effectiveness: 0.70
+        tier: "open_source"
+        notes: "Proxy for 100+ LLM providers"
+      - name: "MLflow Gateway"
+        effectiveness: 0.68
+        tier: "open_source"
+        notes: "Part of MLflow ecosystem"
+      - name: "Kong AI Gateway"
+        effectiveness: 0.75
+        tier: "enterprise"
+        notes: "Enterprise API gateway with AI extensions"
+      - name: "Custom"
+        effectiveness: 0.45
+        tier: "custom"
+      - name: "Other"
+        effectiveness: 0.35
+        tier: "other"
+
+  evals:
+    description: "Model evaluation frameworks for quality and safety testing"
+    providers:
+      - name: "Anthropic Evals"
+        effectiveness: 0.88
+        tier: "enterprise"
+        notes: "Comprehensive safety evaluations"
+      - name: "OpenAI Evals"
+        effectiveness: 0.85
+        tier: "open_source"
+        notes: "Extensible evaluation framework"
+      - name: "Promptfoo"
+        effectiveness: 0.78
+        tier: "open_source"
+        notes: "CLI tool for prompt testing and evaluation"
+      - name: "DeepEval"
+        effectiveness: 0.75
+        tier: "open_source"
+        notes: "Unit testing framework for LLMs"
+      - name: "Giskard"
+        effectiveness: 0.72
+        tier: "open_source"
+        notes: "Focus on ML testing and vulnerability scanning"
+      - name: "Inspect AI"
+        effectiveness: 0.80
+        tier: "open_source"
+        notes: "UK AISI framework for model evaluation"
+      - name: "Custom"
+        effectiveness: 0.50
+        tier: "custom"
+      - name: "Other"
+        effectiveness: 0.35
+        tier: "other"
+
+  data_quality:
+    description: "Data validation, cleaning, and quality monitoring"
+    providers:
+      - name: "Great Expectations"
+        effectiveness: 0.82
+        tier: "open_source"
+        notes: "Data validation with expectations"
+      - name: "Soda"
+        effectiveness: 0.80
+        tier: "enterprise"
+        notes: "Data quality platform"
+      - name: "Monte Carlo"
+        effectiveness: 0.85
+        tier: "enterprise"
+        notes: "Data observability platform"
+      - name: "Evidently AI"
+        effectiveness: 0.78
+        tier: "open_source"
+        notes: "ML model monitoring and data drift"
+      - name: "Cleanlab"
+        effectiveness: 0.76
+        tier: "open_source"
+        notes: "Data-centric AI, label quality focus"
+      - name: "Custom"
+        effectiveness: 0.45
+        tier: "custom"
+      - name: "Other"
+        effectiveness: 0.30
+        tier: "other"
+
+  monitoring:
+    description: "Runtime monitoring, observability, and anomaly detection"
+    providers:
+      - name: "Langfuse"
+        effectiveness: 0.80
+        tier: "open_source"
+        notes: "LLM observability platform, self-hosted option"
+      - name: "LangSmith"
+        effectiveness: 0.82
+        tier: "enterprise"
+        notes: "LangChain native observability"
+      - name: "Weights & Biases"
+        effectiveness: 0.78
+        tier: "enterprise"
+        notes: "ML experiment tracking and monitoring"
+      - name: "Arize AI"
+        effectiveness: 0.83
+        tier: "enterprise"
+        notes: "ML observability with embeddings analysis"
+      - name: "WhyLabs"
+        effectiveness: 0.79
+        tier: "enterprise"
+        notes: "AI observability with data profiling"
+      - name: "Datadog LLM Observability"
+        effectiveness: 0.76
+        tier: "enterprise"
+        notes: "Part of Datadog APM suite"
+      - name: "Custom"
+        effectiveness: 0.50
+        tier: "custom"
+      - name: "Other"
+        effectiveness: 0.35
+        tier: "other"
+
+  output_filtering:
+    description: "Content moderation and output safety filtering"
+    providers:
+      - name: "OpenAI Moderation"
+        effectiveness: 0.80
+        tier: "api"
+        notes: "Free API for content classification"
+      - name: "Perspective API"
+        effectiveness: 0.75
+        tier: "api"
+        notes: "Google toxicity detection"
+      - name: "LlamaGuard"
+        effectiveness: 0.82
+        tier: "open_source"
+        notes: "Meta content safety classifier"
+      - name: "Azure Content Safety"
+        effectiveness: 0.83
+        tier: "enterprise"
+        notes: "Microsoft content moderation service"
+      - name: "AWS Comprehend"
+        effectiveness: 0.72
+        tier: "enterprise"
+        notes: "NLP service with moderation features"
+      - name: "Guardrails AI"
+        effectiveness: 0.77
+        tier: "open_source"
+        notes: "Output validation framework"
+      - name: "Custom"
+        effectiveness: 0.50
+        tier: "custom"
+      - name: "Other"
+        effectiveness: 0.35
+        tier: "other"
+
+  access_control:
+    description: "Authentication, authorization, and access management for AI systems"
+    providers:
+      - name: "Okta"
+        effectiveness: 0.88
+        tier: "enterprise"
+        notes: "Enterprise identity management"
+      - name: "Auth0"
+        effectiveness: 0.85
+        tier: "enterprise"
+        notes: "Developer-friendly identity platform"
+      - name: "Azure AD"
+        effectiveness: 0.86
+        tier: "enterprise"
+        notes: "Microsoft identity services"
+      - name: "AWS IAM"
+        effectiveness: 0.84
+        tier: "enterprise"
+        notes: "AWS native access control"
+      - name: "Oso"
+        effectiveness: 0.78
+        tier: "enterprise"
+        notes: "Authorization as a service"
+      - name: "Custom"
+        effectiveness: 0.55
+        tier: "custom"
+      - name: "Other"
+        effectiveness: 0.40
+        tier: "other"
+
+  model_governance:
+    description: "Model versioning, lineage, and governance frameworks"
+    providers:
+      - name: "MLflow"
+        effectiveness: 0.80
+        tier: "open_source"
+        notes: "Complete ML lifecycle management"
+      - name: "Weights & Biases"
+        effectiveness: 0.82
+        tier: "enterprise"
+        notes: "Experiment tracking and model registry"
+      - name: "Neptune.ai"
+        effectiveness: 0.78
+        tier: "enterprise"
+        notes: "ML metadata store"
+      - name: "DVC"
+        effectiveness: 0.72
+        tier: "open_source"
+        notes: "Data and model version control"
+      - name: "Kubeflow"
+        effectiveness: 0.70
+        tier: "open_source"
+        notes: "Kubernetes ML platform"
+      - name: "Domino Data Lab"
+        effectiveness: 0.84
+        tier: "enterprise"
+        notes: "Enterprise MLOps platform"
+      - name: "Custom"
+        effectiveness: 0.45
+        tier: "custom"
+      - name: "Other"
+        effectiveness: 0.30
+        tier: "other"
+
+  # Catch-all for unrecognized surfaces
+  other:
+    description: "Catch-all for safety measures not fitting other categories"
+    providers:
+      - name: "Custom"
+        effectiveness: 0.40
+        tier: "custom"
+      - name: "Other"
+        effectiveness: 0.25
+        tier: "other"
+
+# Default fallback for unspecified surfaces
+default:
+  providers:
+    - name: "Custom"
+      effectiveness: 0.40
+      tier: "custom"
+    - name: "Other"
+      effectiveness: 0.25
+      tier: "other"

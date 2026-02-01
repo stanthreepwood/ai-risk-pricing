@@ -1,11 +1,3 @@
-"""
-Configuration parameters for the AI Catastrophe Model.
-
-Contains global simulation parameters, default loading factors, and model
-calibration constants. These values represent expert judgment in the absence
-of historical loss data for AI catastrophe events.
-"""
-
 from dataclasses import dataclass
 from typing import Final
 
@@ -176,6 +168,45 @@ class DarkScenarioParams:
 
 
 # =============================================================================
+# MITIGATION PARAMETERS
+# =============================================================================
+
+@dataclass(frozen=True)
+class MitigationParams:
+    """
+    Parameters governing safety measure effectiveness in risk mitigation.
+    
+    Safety measures (prompt injection detection, monitoring, etc.) reduce
+    scenario severity, but this reduction is bounded by realistic constraints:
+    - No measure provides perfect protection (min residual risk)
+    - Layering controls has diminishing returns
+    - Maximum reduction is capped to prevent unrealistic outcomes
+    """
+    
+    min_residual_risk: float = 0.1
+    """
+    Floor on residual risk factor [0, 1].
+    Even with perfect controls, some risk always remains.
+    Default 0.1 means at least 10% of scenario severity persists.
+    """
+    
+    max_total_reduction: float = 0.8
+    """
+    Cap on total risk reduction [0, 1].
+    Maximum proportion of severity that can be mitigated.
+    Default 0.8 means maximum 80% reduction.
+    """
+    
+    diminishing_returns: bool = True
+    """
+    Whether to use multiplicative combination of controls.
+    If True, multiple controls combine with diminishing returns
+    (1 - Π(1 - reduction)). If False, uses simple additive combination
+    capped at max_total_reduction.
+    """
+
+
+# =============================================================================
 # AGGREGATE CONFIG
 # =============================================================================
 
@@ -191,6 +222,7 @@ class ModelConfig:
     dependency: DependencyParams = DependencyParams()
     capability: CapabilityParams = CapabilityParams()
     dark_scenario: DarkScenarioParams = DarkScenarioParams()
+    mitigation: MitigationParams = MitigationParams()
     
     def with_dark_mode(self, enabled: bool = True) -> "ModelConfig":
         """Return a new config with dark scenario mode toggled."""
@@ -207,6 +239,7 @@ class ModelConfig:
                 severity_multiplier=self.dark_scenario.severity_multiplier,
                 enabled=enabled,
             ),
+            mitigation=self.mitigation,
         )
 
 

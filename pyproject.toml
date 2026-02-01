@@ -36,3 +36,8 @@ select = ["E", "F", "I", "N", "W"]
 [tool.mypy]
 python_version = "3.11"
 strict = true
+
+[dependency-groups]
+dev = [
+    "pytest>=9.0.2",
+]

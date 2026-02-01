@@ -17,6 +17,13 @@ from ai_risk_pricing.pricing import (
     IndividualPremiumCalculator,
     estimate_safety_investment_benefit,
 )
+from ai_risk_pricing.safety import (
+    RiskSurface,
+    SafetyProfile,
+    MitigationEngine,
+    get_registry,
+    build_profile_from_selections,
+)
 
 # =============================================================================
 # PAGE CONFIG & STYLING
@@ -781,14 +788,88 @@ elif page == "🏢 New Company Simulation":
             help="Degree of autonomous AI decision-making (0.1=human-supervised, 0.9=fully autonomous)",
         )
         
-        safety_score = st.slider(
-            "Safety Practices Score",
-            min_value=0.2,
-            max_value=0.95,
-            value=0.6,
-            step=0.05,
-            help="Quality of AI risk management and safety practices (0.2=poor, 0.95=excellent)",
+        st.markdown("---")
+        st.markdown("### Safety Tools & Controls")
+        st.markdown(
+            '<p style="color: #888; font-size: 0.85rem;">Select the AI safety tools deployed by the company. '
+            'These reduce risk exposure and lower premiums.</p>',
+            unsafe_allow_html=True,
         )
+        
+        # Get provider registry for dropdown options
+        registry = get_registry()
+        
+        # Define display names and icons for each surface
+        surface_config = {
+            RiskSurface.PROMPT_INJECTION: ("🛡️ Prompt Injection Defense", "Detects and blocks prompt injection attacks"),
+            RiskSurface.GATEWAY: ("🚪 AI Gateway", "Traffic control, rate limiting, routing"),
+            RiskSurface.MONITORING: ("📊 Runtime Monitoring", "Observability and anomaly detection"),
+            RiskSurface.OUTPUT_FILTERING: ("🔍 Output Filtering", "Content moderation and safety filtering"),
+            RiskSurface.EVALS: ("🧪 Model Evaluations", "Quality and safety testing frameworks"),
+            RiskSurface.DATA_QUALITY: ("📁 Data Quality", "Data validation and quality monitoring"),
+            RiskSurface.ACCESS_CONTROL: ("🔐 Access Control", "Authentication and authorization"),
+            RiskSurface.MODEL_GOVERNANCE: ("📋 Model Governance", "Versioning, lineage, and compliance"),
+        }
+        
+        # Store selections
+        safety_selections: dict[str, str | None] = {}
+        
+        # Create expandable section for safety tools
+        with st.expander("🔧 Configure Safety Tools", expanded=True):
+            # Create two columns for the safety tools
+            safety_col1, safety_col2 = st.columns(2)
+            
+            surfaces = list(surface_config.keys())
+            for i, surface in enumerate(surfaces):
+                display_name, help_text = surface_config[surface]
+                providers = ["None"] + registry.list_providers(surface)
+                
+                # Alternate between columns
+                col = safety_col1 if i % 2 == 0 else safety_col2
+                
+                with col:
+                    selection = st.selectbox(
+                        display_name,
+                        options=providers,
+                        index=0,
+                        help=help_text,
+                        key=f"safety_{surface.value}",
+                    )
+                    
+                    if selection != "None":
+                        safety_selections[surface.value] = selection
+        
+        # Build safety profile from selections
+        if safety_selections:
+            safety_profile = build_profile_from_selections(safety_selections)
+            safety_score = safety_profile.overall_score
+        else:
+            safety_profile = SafetyProfile.empty()
+            safety_score = 0.0
+        
+        # Show computed safety score
+        n_tools = len(safety_selections)
+        if n_tools > 0:
+            st.markdown(
+                f"""
+                <div style="background: linear-gradient(135deg, rgba(201,169,98,0.1), rgba(201,169,98,0.05)); 
+                     padding: 1rem; border-radius: 8px; border: 1px solid rgba(201,169,98,0.3); margin-top: 0.5rem;">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <span style="color: #a0a0a0; font-size: 0.85rem;">Safety Tools Deployed</span>
+                            <div style="color: #c9a962; font-size: 1.5rem; font-weight: 600;">{n_tools} / {len(surface_config)}</div>
+                        </div>
+                        <div style="text-align: right;">
+                            <span style="color: #a0a0a0; font-size: 0.85rem;">Computed Safety Score</span>
+                            <div style="color: #c9a962; font-size: 1.5rem; font-weight: 600;">{safety_score:.1%}</div>
+                        </div>
+                    </div>
+                </div>
+                """,
+                unsafe_allow_html=True,
+            )
+        else:
+            st.info("💡 Select safety tools above to reduce risk and premiums")
         
         st.markdown("---")
         
@@ -802,14 +883,15 @@ elif page == "🏢 New Company Simulation":
         calculate_btn = st.button("⚡ Calculate Premium", use_container_width=True)
     
     with col_viz:
-        # Create company object
+        # Create company object with safety profile
         company = Company(
             name=company_name,
             revenue=revenue,
             ai_dependency_score=ai_dependency,
             autonomy_level=autonomy_level,
-            safety_score=safety_score,
+            _legacy_safety_score=safety_score,
             sector=sector_enum,
+            safety_profile=safety_profile if safety_selections else None,
         )
         
         # Risk radar chart
@@ -967,6 +1049,108 @@ elif page == "🏢 New Company Simulation":
                     """,
                     unsafe_allow_html=True,
                 )
+        
+        # Show mitigation impact if safety tools are selected
+        if safety_selections and safety_profile.measures:
+            st.markdown("---")
+            st.markdown("### 🛡️ Safety Tools Impact Analysis")
+            st.markdown(
+                '<p style="color: #a0a0a0;">How your selected safety tools reduce risk exposure across different catastrophe scenarios</p>',
+                unsafe_allow_html=True,
+            )
+            
+            # Get scenarios and compute mitigation factors
+            scenario_gen = ScenarioGenerator()
+            scenarios = scenario_gen.get_predefined_scenarios()
+            mitigation_engine = MitigationEngine()
+            
+            # Compute mitigation for each scenario
+            mitigation_data = []
+            for scenario in scenarios:
+                analysis = mitigation_engine.analyze_mitigation(scenario, safety_profile)
+                mitigation_data.append({
+                    "Scenario": scenario.name,
+                    "Mitigation Factor": analysis["mitigation_factor"],
+                    "Risk Reduction": analysis["total_reduction"],
+                    "Surfaces Covered": f"{analysis['n_covered_surfaces']}/{analysis['n_relevant_surfaces']}",
+                    "Coverage Gaps": ", ".join(analysis["coverage_gaps"]) if analysis["coverage_gaps"] else "None",
+                })
+            
+            mitigation_col1, mitigation_col2 = st.columns([1.2, 1])
+            
+            with mitigation_col1:
+                # Mitigation bar chart
+                scenario_names = [d["Scenario"].replace(" ", "\n") for d in mitigation_data]
+                reductions = [d["Risk Reduction"] * 100 for d in mitigation_data]
+                
+                fig_mitigation = go.Figure()
+                
+                fig_mitigation.add_trace(go.Bar(
+                    y=scenario_names,
+                    x=reductions,
+                    orientation="h",
+                    marker=dict(
+                        color=reductions,
+                        colorscale=[[0, "#3d3d3d"], [0.5, "#c9a962"], [1, "#22c55e"]],
+                        line=dict(color="#c9a962", width=1),
+                    ),
+                    text=[f"{r:.0f}%" for r in reductions],
+                    textposition="outside",
+                    textfont=dict(color="#c9a962"),
+                ))
+                
+                fig_mitigation = apply_dark_theme(fig_mitigation)
+                fig_mitigation.update_layout(
+                    title=dict(
+                        text="Risk Reduction by Scenario",
+                        font=dict(color="#f5f5f5", size=14),
+                    ),
+                    xaxis=dict(
+                        title="Risk Reduction (%)",
+                        range=[0, 100],
+                        gridcolor="rgba(42,42,42,0.4)",
+                    ),
+                    yaxis=dict(
+                        tickfont=dict(size=10),
+                    ),
+                    height=350,
+                    margin=dict(l=10, r=80, t=40, b=40),
+                )
+                
+                st.plotly_chart(fig_mitigation, use_container_width=True)
+            
+            with mitigation_col2:
+                st.markdown("#### Coverage Details")
+                
+                # Show per-surface effectiveness
+                surface_scores = safety_profile.surface_scores()
+                if surface_scores:
+                    for surface, score in sorted(surface_scores.items(), key=lambda x: -x[1]):
+                        # Get display name
+                        display_name = surface.value.replace("_", " ").title()
+                        # Color based on effectiveness
+                        color = "#22c55e" if score >= 0.7 else "#c9a962" if score >= 0.5 else "#ef4444"
+                        
+                        st.markdown(
+                            f"""
+                            <div style="display: flex; justify-content: space-between; align-items: center; 
+                                 padding: 0.5rem 0; border-bottom: 1px solid #2a2a2a;">
+                                <span style="color: #a0a0a0; font-size: 0.9rem;">{display_name}</span>
+                                <span style="color: {color}; font-weight: 600;">{score:.0%}</span>
+                            </div>
+                            """,
+                            unsafe_allow_html=True,
+                        )
+                
+                # Show uncovered surfaces as a warning
+                uncovered = safety_profile.uncovered_surfaces
+                # Remove "other" from uncovered as it's not typically needed
+                uncovered = {s for s in uncovered if s != RiskSurface.OTHER}
+                
+                if uncovered:
+                    st.markdown("#### ⚠️ Coverage Gaps")
+                    uncovered_names = [s.value.replace("_", " ").title() for s in uncovered]
+                    st.warning(f"Consider adding: {', '.join(uncovered_names[:4])}")
         
         # Safety investment analysis
         st.markdown("---")

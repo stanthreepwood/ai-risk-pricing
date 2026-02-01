@@ -37,7 +37,7 @@ const Hero = () => {
           
           <div className={styles.cta}>
             <motion.a
-              href="/app"
+              href="https://pricing-ai-risks.streamlit.app/"
               className={styles.ctaPrimary}
               whileHover={{ scale: 1.02, boxShadow: '0 0 40px rgba(201, 169, 98, 0.4)' }}
               whileTap={{ scale: 0.98 }}

@@ -1,0 +1,235 @@
+dsa_risk_taxonomy:
+  - risk_id: MP-01
+    name: Exposure of minors to harmful or age-inappropriate content
+    category: Protection of minors
+    layer:
+      - enterprise
+    sectors:
+      - Social media
+      - Video platforms
+      - Gaming
+      - Content sharing
+    expected_severity: Very High
+    expected_frequency: Very High
+    dsa_obligations:
+      - Protection of minors by design and by default (Art. 28)
+      - Appropriate content moderation measures
+      - Age-appropriate recommender system settings
+      - Clear terms and safeguards for minors
+
+  - risk_id: MP-01
+    name: Exposure of minors to harmful or age-inappropriate content
+    category: Protection of minors
+    layer:
+      - enterprise
+    sectors:
+      - Social media
+      - Streaming
+      - News aggregation
+    expected_severity: Very High
+    expected_frequency: High
+    dsa_obligations:
+      - Risk-aware recommender design
+      - Avoidance of engagement-optimised amplification for minors
+      - Default high-privacy and low-profiling settings (Art. 28)
+
+  - risk_id: MP-02
+    name: Addictive design patterns affecting minors
+    category: Protection of minors
+    layer:
+      - enterprise
+    sectors:
+      - Social media
+      - Gaming
+      - Short-form video
+    expected_severity: High
+    expected_frequency: Very High
+    dsa_obligations:
+      - Avoidance of dark patterns (Art. 25)
+      - Protection of minors by design (Art. 28)
+      - Interface design mitigating compulsive use
+
+  - risk_id: MP-03
+    name: Targeted advertising based on profiling of minors
+    category: Protection of minors
+    layer:
+      - advertising_system
+    sectors:
+      - Advertising
+      - E-commerce
+      - Social media
+    expected_severity: High
+    expected_frequency: Medium-High
+    dsa_obligations:
+      - Prohibition of targeted advertising to minors (Art. 28)
+      - Clear separation of ad delivery and profiling systems
+
+  - risk_id: MP-04
+    name: Inadequate age verification or age assurance mechanisms
+    category: Protection of minors
+    layer:
+      - enterprise
+    sectors:
+      - Social media
+      - Adult content
+      - Gaming
+    expected_severity: High
+    expected_frequency: High
+    dsa_obligations:
+      - Proportionate age assurance measures
+      - Privacy-preserving age verification
+      - Risk-based access controls (Art. 28)
+
+  - risk_id: TR-DSA-01
+    name: Lack of transparency in recommender systems
+    category: Transparency
+    layer:
+      - enterprise
+    sectors:
+      - Social media
+      - Marketplaces
+      - Content platforms
+    expected_severity: Medium-High
+    expected_frequency: Very High
+    dsa_obligations:
+      - Clear explanation of recommender logic (Art. 27)
+      - User choice over recommender parameters
+      - Non-profiling-based alternatives
+
+  - risk_id: TR-DSA-02
+    name: Dark patterns undermining user choice
+    category: User autonomy
+    layer:
+      - enterprise
+    sectors:
+      - E-commerce
+      - Social media
+      - Subscription services
+    expected_severity: Medium-High
+    expected_frequency: Very High
+    dsa_obligations:
+      - Prohibition of deceptive or manipulative interfaces (Art. 25)
+      - Neutral choice architecture
+
+  - risk_id: TR-DSA-03
+    name: Insufficient ad transparency
+    category: Transparency
+    layer:
+      - advertising_system
+    sectors:
+      - Advertising
+      - Social media
+      - Marketplaces
+    expected_severity: Medium
+    expected_frequency: High
+    dsa_obligations:
+      - Clear identification of ads (Art. 26)
+      - Disclosure of advertiser identity
+      - Explanation of targeting criteria
+
+  - risk_id: IC-01
+    name: Delayed or ineffective removal of illegal content
+    category: Illegal content
+    layer:
+      - enterprise
+    sectors:
+      - Hosting services
+      - Social media
+      - Marketplaces
+    expected_severity: High
+    expected_frequency: High
+    dsa_obligations:
+      - Notice-and-action mechanisms (Art. 16)
+      - Timely content moderation
+      - Statement of reasons to users (Art. 17)
+
+  - risk_id: IC-02
+    name: Abuse of notice-and-action mechanisms
+    category: Procedural fairness
+    layer:
+      - enterprise
+    sectors:
+      - Social media
+      - Marketplaces
+    expected_severity: Medium
+    expected_frequency: Medium-High
+    dsa_obligations:
+      - Safeguards against abusive notices
+      - Complaint and redress mechanisms (Art. 20)
+
+  - risk_id: SR-01
+    name: Systemic amplification of harmful content
+    category: Systemic risk
+    layer:
+      - enterprise
+    sectors:
+      - Social media
+      - Video platforms
+    expected_severity: Very High
+    expected_frequency: High
+    applicable_to: VLOPs_and_VLOSEs_only
+    dsa_obligations:
+      - Systemic risk assessment (Art. 34)
+      - Risk mitigation measures (Art. 35)
+      - Independent audits (Art. 37)
+
+  - risk_id: SR-02
+    name: Algorithmic dissemination of disinformation at scale
+    category: Systemic risk
+    layer:
+      - enterprise
+    sectors:
+      - Social media
+      - News aggregation
+    expected_severity: Very High
+    expected_frequency: Medium-High
+    applicable_to: VLOPs_and_VLOSEs_only
+    dsa_obligations:
+      - Systemic risk assessment (Art. 34)
+      - Crisis response mechanisms (Art. 36)
+      - Cooperation with authorities
+
+  - risk_id: SR-03
+    name: Societal harm to minors at population scale
+    category: Systemic risk
+    layer:
+      - enterprise
+    sectors:
+      - Social media
+      - Video platforms
+    expected_severity: Extreme
+    expected_frequency: Medium
+    applicable_to: VLOPs_and_VLOSEs_only
+    dsa_obligations:
+      - Dedicated systemic risk analysis for minors (Art. 34)
+      - Enhanced mitigation measures (Art. 35)
+      - Access to data for vetted researchers (Art. 40)
+
+  - risk_id: GV-01
+    name: Insufficient internal governance for DSA compliance
+    category: Accountability
+    layer:
+      - enterprise
+    sectors:
+      - All online intermediaries
+    expected_severity: Medium-High
+    expected_frequency: High
+    dsa_obligations:
+      - Single point of contact (Art. 11)
+      - Legal representative where applicable (Art. 13)
+      - Internal compliance processes
+
+  - risk_id: GV-02
+    name: Lack of traceability and audit readiness
+    category: Accountability
+    layer:
+      - enterprise
+    sectors:
+      - VLOPs
+      - Large platforms
+    expected_severity: High
+    expected_frequency: Medium
+    dsa_obligations:
+      - Record keeping
+      - Audit cooperation (Art. 37)
+      - Transparency reporting (Art. 15)

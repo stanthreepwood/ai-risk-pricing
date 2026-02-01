@@ -1,13 +1,3 @@
-"""
-AI Catastrophe Risk Pricing Dashboard
-
-An elegant Streamlit application for quantifying AI risks, analyzing portfolio
-metrics, and calculating individual company premiums. Built with a dark actuarial
-aesthetic reflecting the serious nature of catastrophe risk modeling.
-
-Run with: streamlit run app.py
-"""
-
 import streamlit as st
 import numpy as np
 import pandas as pd

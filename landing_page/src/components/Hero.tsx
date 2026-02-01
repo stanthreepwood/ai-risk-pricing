@@ -13,8 +13,18 @@ const Hero = () => {
           transition={{ duration: 0.8, ease: 'easeOut' }}
         >
           <div className={styles.badge}>
-            <span className={styles.badgeIcon}>◈</span>
-            <span>Catastrophe Risk Modeling</span>
+            <img 
+              src="https://framerusercontent.com/images/UHxUj0LmVxOq70NyvUz698P5IY.png?width=174&height=164" 
+              alt="Badge" 
+              style={{
+                height: '1.5em',
+                width: 'auto',
+                verticalAlign: 'middle',
+                marginRight: '0.5em',
+                display: 'inline-block'
+              }}
+            />
+            <span>Technical AI governance for Apart Hackathon</span>
           </div>
           
           <h1 className={styles.title}>

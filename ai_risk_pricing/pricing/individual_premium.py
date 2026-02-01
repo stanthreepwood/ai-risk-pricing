@@ -222,8 +222,9 @@ def estimate_safety_investment_benefit(
         revenue=company.revenue,
         ai_dependency_score=company.ai_dependency_score,
         autonomy_level=company.autonomy_level,
-        safety_score=new_safety,
+        _legacy_safety_score=new_safety,
         sector=company.sector,
+        safety_profile=company.safety_profile,
     )
     
     improved_result = calculator.calculate_quick_premium(improved_company)

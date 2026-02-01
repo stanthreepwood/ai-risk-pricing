@@ -117,6 +117,10 @@ class Scenario:
     input to the Monte Carlo engine. 
     Both the frequency (how often events occur) and severity 
     (how large losses are when events occur) components of the compound frequency-severity model used in catastrophe pricing.
+    
+    The `known_mitigations` field specifies which safety controls can reduce
+    this scenario's severity, enabling risk-aware pricing that rewards
+    companies with appropriate safety measures.
     """
     
     name: str
@@ -132,6 +136,21 @@ class Scenario:
     tail_multiplier: float = 1.0
     capability_threshold: float = 0.7
     threshold_multiplier: float = 3.0
+    known_mitigations: dict[str, float] = field(default_factory=dict)
+    """
+    Maps RiskSurface values to maximum severity reduction [0, 1].
+    
+    Specifies which safety measures can reduce this scenario's severity
+    and the maximum reduction achievable with perfect controls.
+    
+    Example: {"prompt_injection": 0.7, "gateway": 0.5, "monitoring": 0.3}
+    means prompt injection controls can reduce severity by up to 70%,
+    gateway controls by 50%, and monitoring by 30%.
+    
+    The actual reduction depends on the company's SafetyProfile scores
+    for each surface. If a company has 80% effectiveness on prompt
+    injection, the actual reduction is 0.7 * 0.8 = 56%.
+    """
     metadata: dict[str, Any] = field(default_factory=dict)
     
     def __post_init__(self) -> None:

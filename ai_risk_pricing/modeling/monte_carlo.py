@@ -1,13 +1,19 @@
+from __future__ import annotations
+
 import numpy as np
 import pandas as pd
 from dataclasses import dataclass
-from typing import Sequence
+from typing import Sequence, TYPE_CHECKING
 
 from .frequency import FrequencyModel
 from .severity import SeverityModel
 from .dependency import DependencyGraph
 from ..scenario.schema import Scenario
 from ..config import ModelConfig, DEFAULT_CONFIG
+
+if TYPE_CHECKING:
+    from ai_risk_pricing.safety.measure import SafetyProfile
+    from ai_risk_pricing.safety.mitigation import MitigationEngine
 
 
 @dataclass
@@ -47,7 +53,23 @@ class MonteCarloEngine:
         dependency_graph: DependencyGraph,
         config: ModelConfig = DEFAULT_CONFIG,
         seed: int | None = None,
+        mitigation_engine: MitigationEngine | None = None,
+        safety_profile: SafetyProfile | None = None,
     ) -> None:
+        """
+        Initialize the Monte Carlo simulation engine.
+        
+        Args:
+            scenarios: List of catastrophe scenarios to simulate.
+            dependency_graph: Graph defining loss propagation structure.
+            config: Model configuration parameters.
+            seed: Random seed for reproducibility.
+            mitigation_engine: Optional engine for computing safety mitigation.
+                When provided along with safety_profile, applies mitigation
+                factors to severity samples.
+            safety_profile: Optional safety profile for mitigation calculations.
+                Can be a portfolio-level profile or individual company profile.
+        """
         self.scenarios = list(scenarios)
         self.dependency_graph = dependency_graph
         self.config = config
@@ -58,6 +80,46 @@ class MonteCarloEngine:
         self.severity_model = SeverityModel(rng=self.rng)
         
         self._scenario_lambdas = np.array([s.base_frequency for s in self.scenarios])
+        
+        # Mitigation components (optional)
+        self.mitigation_engine = mitigation_engine
+        self.safety_profile = safety_profile
+        
+        # Pre-compute mitigation factors for each scenario if engine is provided
+        self._mitigation_factors: dict[str, float] = {}
+        if self.mitigation_engine and self.safety_profile:
+            for scenario in self.scenarios:
+                factor = self.mitigation_engine.compute_mitigation_factor(
+                    scenario, self.safety_profile
+                )
+                self._mitigation_factors[scenario.name] = factor
+    
+    def _apply_mitigation(
+        self,
+        scenario: Scenario,
+        severities: np.ndarray,
+    ) -> np.ndarray:
+        """
+        Apply safety mitigation to severity samples.
+        
+        If a mitigation engine and safety profile are configured, reduces
+        severities based on the scenario's known_mitigations and the
+        profile's coverage of relevant risk surfaces.
+        
+        Args:
+            scenario: The scenario being simulated.
+            severities: Array of sampled severity values.
+            
+        Returns:
+            Mitigated severity values (may be modified in place).
+        """
+        if not self._mitigation_factors:
+            return severities
+        
+        factor = self._mitigation_factors.get(scenario.name, 1.0)
+        if factor < 1.0:
+            return severities * factor
+        return severities
     
     def simulate_year(self) -> tuple[float, dict[str, float]]:
         """
@@ -93,6 +155,8 @@ class MonteCarloEngine:
                 tail_multiplier=scenario.tail_multiplier,
                 size=n_events,
             )
+            
+            severities = self._apply_mitigation(scenario, severities)
             
             # propagate each event through dependency graph
             scenario_total = 0.0
@@ -229,6 +293,9 @@ class MonteCarloEngine:
                     size=n_events,
                 )
                 
+                # Apply safety mitigation
+                severities = self._apply_mitigation(scenario, severities)
+                
                 # Propagate each event
                 root_node = self._get_root_node(scenario)
                 year_total = sum(
@@ -308,6 +375,13 @@ class MonteCarloEngine:
                 tail_multiplier=dark_scenario.tail_multiplier,
                 size=n_events,
             )
+            
+            # Apply safety mitigation (compute dynamically for dark scenarios)
+            if self.mitigation_engine and self.safety_profile:
+                factor = self.mitigation_engine.compute_mitigation_factor(
+                    dark_scenario, self.safety_profile
+                )
+                severities = severities * factor
             
             root_node = self._get_root_node(dark_scenario)
             dark_loss = sum(

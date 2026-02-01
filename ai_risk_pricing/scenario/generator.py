@@ -1,5 +1,6 @@
 from ai_risk_pricing.scenario.known_known.kk_dummy_llm import known_knowns_scenarios
 from ai_risk_pricing.scenario.known_known.kk_stat_parameter_estimation import create_aggregated_scenarios
+from ai_risk_pricing.scenario.known_unk.ku_dummy_llm import ku_dummy_llm_scenarios
 import numpy as np
 
 from .schema import (
@@ -316,10 +317,12 @@ class ScenarioGenerator:
             },
         )
     
-    def get_all_scenarios(self, include_known_knowns: bool = True, include_dark: bool = False) -> list[Scenario]:
+    def get_all_scenarios(self, include_known_knowns: bool = False, include_known_unks: bool = False, include_dark: bool = False) -> list[Scenario]:
         scenarios = self.get_predefined_scenarios()
         if include_dark:
             scenarios.append(self.get_dark_scenario())
+        if include_known_unks:
+            scenarios.extend(ku_dummy_llm_scenarios)
         if include_known_knowns:
             scenarios.extend(create_aggregated_scenarios(known_knowns_scenarios))
         return scenarios

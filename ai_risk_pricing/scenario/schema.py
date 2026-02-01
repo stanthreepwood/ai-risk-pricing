@@ -27,6 +27,9 @@ class EventType(str, Enum):
     Classification of AI catastrophe event types.
     """
     
+    FUNDAMENTAL_RIGHTS_VIOLATION = "fundamental_rights_violation"
+    """Violation of fundamental rights of individuals or groups."""
+    
     SYSTEMIC_FAILURE = "systemic_failure"
     """Correlated failure across AI systems sharing common components."""
     
@@ -125,6 +128,7 @@ class Scenario:
     severity_distribution: SeverityDistribution
     severity_materialization: float | None = None
     legal_frameworks: dict | None = None
+    exclusive_to_sectors: list[str] | None = None
     tail_multiplier: float = 1.0
     capability_threshold: float = 0.7
     threshold_multiplier: float = 3.0
@@ -147,6 +151,10 @@ class Scenario:
         if self.threshold_multiplier < 1.0:
             raise ValueError(
                 f"threshold_multiplier must be >= 1.0, got {self.threshold_multiplier}"
+            )
+        if self.exclusive_to_sectors and not self.affected_nodes:
+            raise ValueError(
+                f"exclusive_to_sectors requires affected_nodes, got {self.exclusive_to_sectors}"
             )
     
     @property

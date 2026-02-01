@@ -1,0 +1,300 @@
+ai_act_risk_taxonomy:
+  - risk_id: FR-01
+    name: Discriminatory or biased outcomes
+    category: Fundamental rights
+    layer:
+      - foundation_model
+      - saas_provider
+      - enterprise
+    sectors:
+      - Employment
+      - Finance
+      - Insurance
+      - Healthcare
+      - Public sector
+    expected_severity: Very High
+    expected_frequency: High
+    ai_act_obligations:
+      - Risk management system (Art. 9)
+      - Data governance and quality (Art. 10)
+      - Bias detection and mitigation
+      - Technical documentation
+
+  - risk_id: FR-01
+    name: Discriminatory or biased outcomes
+    category: Fundamental rights
+    layer:
+      - saas_provider
+      - enterprise
+    sectors:
+      - Employment
+      - Finance
+      - Insurance
+      - Healthcare
+      - Education
+      - Housing
+    expected_severity: Very High
+    expected_frequency: Very High
+    ai_act_obligations:
+      - Human oversight (Art. 14)
+      - Accuracy and performance controls
+      - Post-market monitoring
+      - User instructions and limitations
+
+  - risk_id: FR-01
+    name: Discriminatory or biased outcomes
+    category: Fundamental rights
+    layer: 
+      - enterprise
+    sectors:
+      - Any regulated sector
+    expected_severity: High
+    expected_frequency: High
+    ai_act_obligations:
+      - Proper deployment and use
+      - Monitoring of real-world impacts
+      - Incident reporting
+
+  - risk_id: TR-01
+    name: Lack of transparency about AI interaction
+    category: Transparency
+    layer:
+      - saas_provider
+      - enterprise
+    sectors:
+      - Consumer services
+      - Media
+      - Customer support
+      - Education
+    expected_severity: Medium-High
+    expected_frequency: Very High
+    ai_act_obligations:
+      - User notification of AI interaction
+      - Clear AI labeling
+
+  - risk_id: TR-02
+    name: Undisclosed AI-generated or synthetic content
+    category: Transparency
+    layer:
+      - saas_provider
+      - enterprise
+    sectors:
+      - Media
+      - Marketing
+      - Political communication
+    expected_severity: High
+    expected_frequency: Medium-High
+    ai_act_obligations:
+      - Synthetic content disclosure
+      - Watermarking or provenance mechanisms
+
+  - risk_id: TR-03
+    name: Internal black-box usage of AI systems
+    category: Transparency
+    layer:
+      - enterprise
+    sectors:
+      - Finance
+      - Healthcare
+      - Public sector
+      - Human resources
+    expected_severity: High
+    expected_frequency: High
+    ai_act_obligations:
+      - Logging and record keeping
+      - Explainability for operators
+      - Audit-ready documentation
+
+  - risk_id: GP-01
+    name: Unsafe general-purpose model capabilities
+    category: Systemic risk
+    layer:
+      - foundation_model
+    sectors:
+      - Cross-sectoral
+    expected_severity: Very High
+    expected_frequency: Medium
+    ai_act_obligations:
+      - Model evaluation and testing
+      - Systemic risk assessment (GPAI)
+      - Incident reporting
+      - Model cards and summaries
+
+  - risk_id: GP-02
+    name: Foreseeable downstream misuse of general-purpose models
+    category: Systemic risk
+    layer:
+      - foundation_model
+    sectors:
+      - Cross-sectoral
+    expected_severity: High
+    expected_frequency: High
+    ai_act_obligations:
+      - Misuse mitigation measures
+      - Information sharing with deployers
+      - Usage policies and safeguards
+
+  - risk_id: GP-03
+    name: Capability overreach through agentic or chained systems
+    category: Systemic risk
+    layer:
+      - saas_provider
+      - enterprise
+    sectors:
+      - Automation
+      - Finance
+      - Legal
+      - Cybersecurity
+    expected_severity: High
+    expected_frequency: Medium
+    ai_act_obligations:
+      - Updated risk management
+      - Human-in-the-loop controls
+      - Scope and capability limitations
+
+  - risk_id: RS-01
+    name: Hallucinations in decision-support systems
+    category: Robustness and safety
+    layer:
+      - saas_provider
+      - enterprise
+    sectors:
+      - Healthcare
+      - Legal
+      - Finance
+      - Public services
+    expected_severity: High
+    expected_frequency: Very High
+    ai_act_obligations:
+      - Accuracy and robustness requirements
+      - Human oversight
+      - Disclosure of limitations
+
+  - risk_id: RS-02
+    name: Model drift and performance degradation
+    category: Robustness and safety
+    layer:
+      - enterprise
+    sectors:
+      - Any high-risk deployment
+    expected_severity: Medium-High
+    expected_frequency: High
+    ai_act_obligations:
+      - Post-market monitoring
+      - Continuous risk management
+      - Corrective actions
+
+  - risk_id: RS-03
+    name: Adversarial vulnerabilities
+    category: Robustness and safety
+    layer:
+      - foundation_model
+      - saas_provider
+      - enterprise
+    sectors:
+      - Security-sensitive sectors
+    expected_severity: High
+    expected_frequency: Medium
+    ai_act_obligations:
+      - Robustness and security testing
+      - Risk mitigation documentation
+
+  - risk_id: DG-01
+    name: Unlawful or low-quality training data
+    category: Data governance
+    layer:
+      - foundation_model
+    sectors:
+      - Cross-sectoral
+    expected_severity: High
+    expected_frequency: Medium
+    ai_act_obligations:
+      - Data governance processes
+      - Documentation of data sources
+      - Quality and representativeness controls
+
+  - risk_id: DG-02
+    name: Contextual misuse of data at deployment
+    category: Data governance
+    layer:
+      - saas_provider
+      - enterprise
+    sectors:
+      - Human resources
+      - Marketing
+      - Finance
+    expected_severity: Medium-High
+    expected_frequency: High
+    ai_act_obligations:
+      - Intended purpose limitation
+      - Clear deployment instructions
+
+  - risk_id: DG-03
+    name: Shadow AI and uncontrolled internal usage
+    category: Data governance
+    layer:
+      - enterprise
+    sectors:
+      - All sectors
+    expected_severity: Medium-High
+    expected_frequency: Very High
+    ai_act_obligations:
+      - Internal AI governance framework
+      - Risk monitoring and awareness
+
+  - risk_id: HO-01
+    name: Automation bias and over-reliance on AI
+    category: Human oversight
+    layer:
+      - saas_provider
+      - enterprise
+    sectors:
+      - Healthcare
+      - Finance
+      - Law enforcement
+    expected_severity: High
+    expected_frequency: High
+    ai_act_obligations:
+      - Effective human oversight
+      - Override and intervention mechanisms
+
+  - risk_id: HO-02
+    name: Unclear accountability across AI value chain
+    category: Accountability
+    layer:
+      - enterprise
+    sectors:
+      - Complex supply chains
+    expected_severity: High
+    expected_frequency: Medium-High
+    ai_act_obligations:
+      - Clear role definition (provider, deployer, importer)
+      - Traceability
+      - Incident reporting
+
+  - risk_id: PR-01
+    name: Social scoring of individuals
+    category: Prohibited practice
+    layer:
+      - saas_provider
+      - enterprise
+    sectors:
+      - Public sector
+      - Finance
+    expected_severity: Extreme
+    expected_frequency: Low
+    ai_act_obligations:
+      - Absolute prohibition
+
+  - risk_id: PR-02
+    name: Real-time remote biometric identification outside legal exceptions
+    category: Prohibited practice
+    layer:
+      - saas_provider
+      - enterprise
+    sectors:
+      - Law enforcement
+    expected_severity: Extreme
+    expected_frequency: Low
+    ai_act_obligations:
+      - Prohibition unless strict legal exception applies

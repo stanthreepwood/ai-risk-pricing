@@ -60,7 +60,7 @@ def generate_scenarios(include_dark: bool = False, seed: int = 42) -> list:
     print("\nGenerating catastrophe scenarios...")
     
     generator = ScenarioGenerator(rng=np.random.default_rng(seed))
-    scenarios = generator.get_all_scenarios(include_known_knowns=True, include_dark=include_dark)
+    scenarios = generator.get_all_scenarios(include_dark=include_dark)
     
     print(f"  Generated {len(scenarios)} scenarios:")
     for s in scenarios:

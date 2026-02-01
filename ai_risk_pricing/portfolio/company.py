@@ -1,7 +1,17 @@
 from dataclasses import dataclass, field
 from typing import Iterator
 import numpy as np
+from enum import Enum
 
+class Sector(str, Enum):
+    """
+    A sector of the economy.
+    """
+    TECHNOLOGY = "technology"
+    FINANCIAL_SERVICES = "financial_services"
+    HEALTHCARE = "healthcare"
+    MANUFACTURING = "manufacturing"
+    RETAIL = "retail"
 
 @dataclass
 class Company:
@@ -20,7 +30,7 @@ class Company:
     ai_dependency_score: float
     autonomy_level: float
     safety_score: float
-    sector: str = "technology"
+    sector: Sector = Sector.TECHNOLOGY
     metadata: dict = field(default_factory=dict)
     
     def __post_init__(self) -> None:
@@ -156,7 +166,7 @@ class Portfolio:
         """Calculate total exposure grouped by sector."""
         sector_exposure: dict[str, float] = {}
         for company in self.companies:
-            sector = company.sector
+            sector = company.sector.value
             sector_exposure[sector] = sector_exposure.get(sector, 0) + company.exposure
         return sector_exposure
     
@@ -222,7 +232,7 @@ class Portfolio:
                 ai_dependency_score=ai_dependency,
                 autonomy_level=autonomy,
                 safety_score=safety,
-                sector=sector,
+                sector=Sector(sector),
             )
             portfolio.add_company(company)
         return portfolio

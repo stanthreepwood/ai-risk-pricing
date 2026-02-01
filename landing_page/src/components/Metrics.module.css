@@ -1,0 +1,177 @@
+.section {
+  padding: var(--space-4xl) 0;
+  background: var(--color-bg-secondary);
+  position: relative;
+}
+
+.container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 var(--space-xl);
+}
+
+.header {
+  text-align: center;
+  max-width: 640px;
+  margin: 0 auto var(--space-4xl);
+}
+
+.label {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--color-accent-gold);
+  margin-bottom: var(--space-md);
+  padding: var(--space-xs) var(--space-md);
+  border: 1px solid var(--color-accent-gold-dark);
+  border-radius: 4px;
+}
+
+.title {
+  font-size: clamp(2rem, 5vw, 3rem);
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  margin-bottom: var(--space-lg);
+}
+
+.subtitle {
+  font-size: 1.125rem;
+  color: var(--color-text-secondary);
+  line-height: 1.6;
+}
+
+.metricsGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-lg);
+  margin-bottom: var(--space-4xl);
+}
+
+.metricCard {
+  text-align: center;
+  padding: var(--space-2xl);
+  background: var(--color-bg-card);
+  border: 1px solid var(--color-border);
+  border-radius: 16px;
+  position: relative;
+  overflow: hidden;
+}
+
+.metricCard::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60%;
+  height: 2px;
+  background: var(--gradient-gold);
+}
+
+.metricValue {
+  font-family: var(--font-mono);
+  font-size: clamp(2rem, 4vw, 2.5rem);
+  font-weight: 700;
+  color: var(--color-accent-gold);
+  margin-bottom: var(--space-sm);
+  letter-spacing: -0.02em;
+}
+
+.metricLabel {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  margin-bottom: var(--space-sm);
+}
+
+.metricDescription {
+  font-size: 0.875rem;
+  color: var(--color-text-muted);
+  line-height: 1.5;
+}
+
+.formula {
+  background: var(--color-bg-card);
+  border: 1px solid var(--color-border);
+  border-radius: 16px;
+  padding: var(--space-2xl);
+  text-align: center;
+}
+
+.formulaHeader {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-lg);
+}
+
+.formulaIcon {
+  font-size: 1.5rem;
+  color: var(--color-accent-gold);
+}
+
+.formulaTitle {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+}
+
+.formulaContent {
+  margin-bottom: var(--space-lg);
+}
+
+.formulaCode {
+  font-family: var(--font-mono);
+  font-size: clamp(1rem, 2.5vw, 1.5rem);
+  color: var(--color-text-primary);
+  background: var(--color-bg-tertiary);
+  padding: var(--space-md) var(--space-xl);
+  border-radius: 8px;
+  display: inline-block;
+}
+
+.formulaCode sub {
+  font-size: 0.7em;
+  color: var(--color-accent-gold);
+}
+
+.formulaNote {
+  font-size: 0.9375rem;
+  color: var(--color-text-muted);
+  max-width: 600px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+@media (max-width: 1024px) {
+  .metricsGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .metricsGrid {
+    grid-template-columns: 1fr;
+  }
+  
+  .header {
+    text-align: left;
+  }
+  
+  .formula {
+    text-align: left;
+  }
+  
+  .formulaHeader {
+    justify-content: flex-start;
+  }
+  
+  .formulaCode {
+    display: block;
+    overflow-x: auto;
+  }
+}

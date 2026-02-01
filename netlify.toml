@@ -1,0 +1,16 @@
+# Netlify build config: app lives in landing_page/
+# https://docs.netlify.com/configure-builds/file-based-configuration/
+
+[build]
+  base    = "landing_page"
+  command = "npm ci && npm run build"
+  publish = "dist"
+
+# SPA: serve index.html for all routes (so /app etc. work)
+[[redirects]]
+  from    = "/*"
+  to      = "/index.html"
+  status  = 200
+
+[build.environment]
+  NODE_VERSION = "20"

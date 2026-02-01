@@ -39,29 +39,32 @@ st.set_page_config(
     initial_sidebar_state="expanded",
 )
 
-# Custom dark actuarial theme
+# Custom dark actuarial theme - matching landing page gold/black palette
 DARK_THEME = """
 <style>
-    /* Main background */
+    /* Import Inter and JetBrains Mono fonts */
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+    
+    /* Main background - deep black */
     .stApp {
-        background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%);
+        background: linear-gradient(180deg, #0a0a0a 0%, #111111 100%);
     }
     
     /* Sidebar */
     [data-testid="stSidebar"] {
-        background: linear-gradient(180deg, #0f0f1a 0%, #1a1a2e 100%);
-        border-right: 1px solid #2a2a4a;
+        background: linear-gradient(180deg, #0a0a0a 0%, #111111 100%);
+        border-right: 1px solid #2a2a2a;
     }
     
     /* Headers */
     h1, h2, h3 {
-        color: #e8e8e8 !important;
-        font-family: 'Helvetica Neue', sans-serif;
-        letter-spacing: 0.5px;
+        color: #f5f5f5 !important;
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        letter-spacing: -0.02em;
     }
     
     h1 {
-        background: linear-gradient(90deg, #00d4ff, #7b68ee);
+        background: linear-gradient(135deg, #c9a962 0%, #9a7d3e 100%);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         font-weight: 700;
@@ -69,32 +72,32 @@ DARK_THEME = """
     
     /* Metrics styling */
     [data-testid="stMetricValue"] {
-        color: #00d4ff !important;
-        font-family: 'Monaco', monospace;
+        color: #c9a962 !important;
+        font-family: 'JetBrains Mono', monospace;
         font-size: 1.8rem !important;
     }
     
     [data-testid="stMetricLabel"] {
-        color: #888 !important;
+        color: #a0a0a0 !important;
         font-size: 0.85rem !important;
         text-transform: uppercase;
         letter-spacing: 1px;
     }
     
     [data-testid="stMetricDelta"] {
-        font-family: 'Monaco', monospace;
+        font-family: 'JetBrains Mono', monospace;
     }
     
     /* Cards/containers */
     .stAlert {
-        background-color: rgba(26, 26, 46, 0.8) !important;
-        border: 1px solid #2a2a4a !important;
+        background-color: rgba(15, 15, 15, 0.9) !important;
+        border: 1px solid #2a2a2a !important;
     }
     
-    /* Buttons */
+    /* Buttons - gold gradient */
     .stButton > button {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white;
+        background: linear-gradient(135deg, #c9a962 0%, #9a7d3e 100%);
+        color: #0a0a0a;
         border: none;
         border-radius: 8px;
         padding: 0.6rem 1.5rem;
@@ -104,50 +107,63 @@ DARK_THEME = """
     
     .stButton > button:hover {
         transform: translateY(-2px);
-        box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+        box-shadow: 0 8px 25px rgba(201, 169, 98, 0.3);
     }
     
     /* Sliders */
     .stSlider > div > div {
-        background-color: #2a2a4a !important;
+        background-color: #2a2a2a !important;
     }
     
     /* Selectbox */
     .stSelectbox > div > div {
-        background-color: #1a1a2e !important;
-        border-color: #2a2a4a !important;
+        background-color: #111111 !important;
+        border-color: #2a2a2a !important;
     }
     
     /* Input fields */
     .stNumberInput > div > div > input {
-        background-color: #1a1a2e !important;
-        border-color: #2a2a4a !important;
-        color: #e8e8e8 !important;
+        background-color: #111111 !important;
+        border-color: #2a2a2a !important;
+        color: #f5f5f5 !important;
     }
     
     /* Expander */
     .streamlit-expanderHeader {
-        background-color: rgba(26, 26, 46, 0.6) !important;
+        background-color: rgba(15, 15, 15, 0.8) !important;
         border-radius: 8px;
     }
     
     /* Dataframes */
     .stDataFrame {
-        border: 1px solid #2a2a4a !important;
+        border: 1px solid #2a2a2a !important;
         border-radius: 8px;
     }
     
     /* Custom metric card */
     .metric-card {
-        background: linear-gradient(135deg, rgba(26, 26, 46, 0.9) 0%, rgba(22, 33, 62, 0.9) 100%);
-        border: 1px solid #2a2a4a;
-        border-radius: 12px;
+        background: #0f0f0f;
+        border: 1px solid #2a2a2a;
+        border-radius: 16px;
         padding: 1.5rem;
         margin: 0.5rem 0;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .metric-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 2px;
+        background: linear-gradient(135deg, #c9a962 0%, #9a7d3e 100%);
+        opacity: 0.5;
     }
     
     .metric-card h4 {
-        color: #888 !important;
+        color: #a0a0a0 !important;
         font-size: 0.75rem;
         text-transform: uppercase;
         letter-spacing: 1.5px;
@@ -155,34 +171,34 @@ DARK_THEME = """
     }
     
     .metric-card .value {
-        color: #00d4ff;
+        color: #c9a962;
         font-size: 2rem;
-        font-family: 'Monaco', monospace;
-        font-weight: 700;
+        font-family: 'JetBrains Mono', monospace;
+        font-weight: 600;
     }
     
     /* Divider line */
     hr {
-        border-color: #2a2a4a !important;
+        border-color: #2a2a2a !important;
     }
     
     /* Risk indicator colors */
-    .risk-low { color: #00d4aa !important; }
-    .risk-medium { color: #ffc107 !important; }
-    .risk-high { color: #ff6b6b !important; }
+    .risk-low { color: #22c55e !important; }
+    .risk-medium { color: #f59e0b !important; }
+    .risk-high { color: #ef4444 !important; }
     
     /* Actuarial accent */
     .actuarial-accent {
-        border-left: 3px solid #7b68ee;
+        border-left: 3px solid #c9a962;
         padding-left: 1rem;
         margin: 1rem 0;
     }
     
     /* Premium highlight */
     .premium-highlight {
-        background: linear-gradient(135deg, rgba(0, 212, 255, 0.1) 0%, rgba(123, 104, 238, 0.1) 100%);
-        border: 1px solid rgba(0, 212, 255, 0.3);
-        border-radius: 12px;
+        background: rgba(201, 169, 98, 0.05);
+        border: 1px solid rgba(201, 169, 98, 0.3);
+        border-radius: 16px;
         padding: 1.5rem;
     }
     
@@ -193,16 +209,17 @@ DARK_THEME = """
     }
     
     .stTabs [data-baseweb="tab"] {
-        background-color: rgba(26, 26, 46, 0.6);
+        background-color: #0f0f0f;
         border-radius: 8px 8px 0 0;
-        border: 1px solid #2a2a4a;
+        border: 1px solid #2a2a2a;
         border-bottom: none;
-        color: #888;
+        color: #a0a0a0;
     }
     
     .stTabs [aria-selected="true"] {
-        background-color: rgba(102, 126, 234, 0.2);
-        color: #00d4ff;
+        background-color: rgba(201, 169, 98, 0.1);
+        color: #c9a962;
+        border-color: #9a7d3e;
     }
 </style>
 """
@@ -216,34 +233,34 @@ st.markdown(DARK_THEME, unsafe_allow_html=True)
 PLOTLY_TEMPLATE = {
     "layout": {
         "paper_bgcolor": "rgba(0,0,0,0)",
-        "plot_bgcolor": "rgba(26,26,46,0.6)",
-        "font": {"color": "#e8e8e8", "family": "Helvetica Neue"},
-        "title": {"font": {"color": "#e8e8e8", "size": 16}},
+        "plot_bgcolor": "rgba(15,15,15,0.8)",
+        "font": {"color": "#f5f5f5", "family": "Inter, -apple-system, sans-serif"},
+        "title": {"font": {"color": "#f5f5f5", "size": 16}},
         "xaxis": {
-            "gridcolor": "rgba(42,42,74,0.5)",
-            "linecolor": "#2a2a4a",
-            "tickfont": {"color": "#888"},
+            "gridcolor": "rgba(42,42,42,0.4)",
+            "linecolor": "#2a2a2a",
+            "tickfont": {"color": "#a0a0a0"},
         },
         "yaxis": {
-            "gridcolor": "rgba(42,42,74,0.5)",
-            "linecolor": "#2a2a4a",
-            "tickfont": {"color": "#888"},
+            "gridcolor": "rgba(42,42,42,0.4)",
+            "linecolor": "#2a2a2a",
+            "tickfont": {"color": "#a0a0a0"},
         },
-        "colorway": ["#00d4ff", "#7b68ee", "#ff6b6b", "#00d4aa", "#ffc107", "#ff8c42"],
-        "legend": {"bgcolor": "rgba(0,0,0,0)", "font": {"color": "#888"}},
+        "colorway": ["#c9a962", "#e4c87a", "#22c55e", "#f59e0b", "#ef4444", "#9a7d3e"],
+        "legend": {"bgcolor": "rgba(0,0,0,0)", "font": {"color": "#a0a0a0"}},
     }
 }
 
 
 def apply_dark_theme(fig: go.Figure) -> go.Figure:
-    """Apply dark actuarial theme to Plotly figure."""
+    """Apply dark actuarial theme to Plotly figure matching landing page style."""
     fig.update_layout(
         paper_bgcolor="rgba(0,0,0,0)",
-        plot_bgcolor="rgba(26,26,46,0.4)",
-        font=dict(color="#e8e8e8", family="Helvetica Neue"),
-        xaxis=dict(gridcolor="rgba(42,42,74,0.5)", linecolor="#2a2a4a"),
-        yaxis=dict(gridcolor="rgba(42,42,74,0.5)", linecolor="#2a2a4a"),
-        legend=dict(bgcolor="rgba(0,0,0,0)", font=dict(color="#888")),
+        plot_bgcolor="rgba(15,15,15,0.6)",
+        font=dict(color="#f5f5f5", family="Inter, -apple-system, sans-serif"),
+        xaxis=dict(gridcolor="rgba(42,42,42,0.4)", linecolor="#2a2a2a"),
+        yaxis=dict(gridcolor="rgba(42,42,42,0.4)", linecolor="#2a2a2a"),
+        legend=dict(bgcolor="rgba(0,0,0,0)", font=dict(color="#a0a0a0")),
     )
     return fig
 
@@ -397,8 +414,8 @@ with st.sidebar:
     st.markdown("---")
     st.markdown(
         """
-        <div style="text-align: center; color: #666; font-size: 0.75rem;">
-            AI Catastrophe Model v0.1<br>
+        <div style="text-align: center; color: #666666; font-size: 0.75rem;">
+            <span style="color: #c9a962;">AI Catastrophe Model</span> v0.1<br>
             Quantifying the Unquantifiable
         </div>
         """,
@@ -413,7 +430,7 @@ with st.sidebar:
 if page == "📊 Portfolio Metrics":
     st.markdown("# Portfolio Risk Analytics")
     st.markdown(
-        '<p style="color: #888; font-size: 1.1rem;">Comprehensive view of AI catastrophe risk exposure and premium calculation</p>',
+        '<p style="color: #a0a0a0; font-size: 1.1rem;">Comprehensive view of AI catastrophe risk exposure and premium calculation</p>',
         unsafe_allow_html=True,
     )
     
@@ -483,8 +500,8 @@ if page == "📊 Portfolio Metrics":
         
         fig_premium = go.Figure()
         
-        # Waterfall-style bars
-        colors = ["#00d4ff", "#7b68ee", "#ffc107", "#00d4aa"]
+        # Waterfall-style bars - gold palette
+        colors = ["#c9a962", "#e4c87a", "#f59e0b", "#22c55e"]
         
         fig_premium.add_trace(go.Bar(
             x=premium_data["Component"],
@@ -492,7 +509,7 @@ if page == "📊 Portfolio Metrics":
             marker_color=colors,
             text=[f"${v:,.2f}M" for v in premium_data["Amount"]],
             textposition="outside",
-            textfont=dict(color="#e8e8e8"),
+            textfont=dict(color="#f5f5f5"),
         ))
         
         fig_premium = apply_dark_theme(fig_premium)
@@ -529,17 +546,31 @@ if page == "📊 Portfolio Metrics":
             x=losses_sorted,
             y=exceedance_prob,
             mode="lines",
-            line=dict(color="#00d4ff", width=2),
+            line=dict(color="#c9a962", width=2),
             fill="tozeroy",
-            fillcolor="rgba(0, 212, 255, 0.1)",
+            fillcolor="rgba(201, 169, 98, 0.1)",
             name="EP Curve",
         ))
         
-        # Add VaR markers
-        fig_ep.add_vline(x=risk_results.var_99, line_dash="dash", line_color="#7b68ee", 
-                         annotation_text="VaR 99%", annotation_position="top")
-        fig_ep.add_vline(x=risk_results.tvar_99, line_dash="dash", line_color="#ff6b6b",
-                         annotation_text="TVaR 99%", annotation_position="top")
+        # Add VaR markers with rotated annotations to avoid overlap
+        fig_ep.add_vline(
+            x=risk_results.var_99, 
+            line_dash="dash", 
+            line_color="#e4c87a", 
+            annotation_text="VaR 99%", 
+            annotation_position="top",
+            annotation_textangle=-45,
+            annotation_font=dict(color="#e4c87a", size=11),
+        )
+        fig_ep.add_vline(
+            x=risk_results.tvar_99, 
+            line_dash="dash", 
+            line_color="#ef4444",
+            annotation_text="TVaR 99%", 
+            annotation_position="top",
+            annotation_textangle=-45,
+            annotation_font=dict(color="#ef4444", size=11),
+        )
         
         fig_ep = apply_dark_theme(fig_ep)
         fig_ep.update_layout(
@@ -567,9 +598,9 @@ if page == "📊 Portfolio Metrics":
             labels=list(sector_exposure.keys()),
             values=list(sector_exposure.values()),
             hole=0.5,
-            marker=dict(colors=["#00d4ff", "#7b68ee", "#ff6b6b", "#00d4aa", "#ffc107"]),
+            marker=dict(colors=["#c9a962", "#e4c87a", "#9a7d3e", "#22c55e", "#f59e0b"]),
             textinfo="label+percent",
-            textfont=dict(color="#e8e8e8"),
+            textfont=dict(color="#f5f5f5"),
         )])
         
         fig_sector = apply_dark_theme(fig_sector)
@@ -603,10 +634,10 @@ if page == "📊 Portfolio Metrics":
             fig_scenario = go.Figure(data=[go.Bar(
                 x=list(scenario_el.keys()),
                 y=list(scenario_el.values()),
-                marker_color="#7b68ee",
+                marker_color="#c9a962",
                 text=[f"${v:,.2f}M" for v in scenario_el.values()],
                 textposition="outside",
-                textfont=dict(color="#e8e8e8"),
+                textfont=dict(color="#f5f5f5"),
             )])
             
             fig_scenario = apply_dark_theme(fig_scenario)
@@ -655,7 +686,7 @@ if page == "📊 Portfolio Metrics":
             <div class="metric-card">
                 <h4>VaR 99%</h4>
                 <div class="value">${risk_results.var_99:,.2f}M</div>
-                <div style="color: #888; font-size: 0.8rem;">1-in-100 year loss</div>
+                <div style="color: #666666; font-size: 0.8rem;">1-in-100 year loss</div>
             </div>
             """,
             unsafe_allow_html=True,
@@ -667,7 +698,7 @@ if page == "📊 Portfolio Metrics":
             <div class="metric-card">
                 <h4>VaR 99.5%</h4>
                 <div class="value">${risk_results.var_995:,.2f}M</div>
-                <div style="color: #888; font-size: 0.8rem;">1-in-200 year loss</div>
+                <div style="color: #666666; font-size: 0.8rem;">1-in-200 year loss</div>
             </div>
             """,
             unsafe_allow_html=True,
@@ -679,7 +710,7 @@ if page == "📊 Portfolio Metrics":
             <div class="metric-card">
                 <h4>TVaR 99.5%</h4>
                 <div class="value">${risk_results.tvar_995:,.2f}M</div>
-                <div style="color: #888; font-size: 0.8rem;">Tail expectation</div>
+                <div style="color: #666666; font-size: 0.8rem;">Tail expectation</div>
             </div>
             """,
             unsafe_allow_html=True,
@@ -691,7 +722,7 @@ if page == "📊 Portfolio Metrics":
             <div class="metric-card">
                 <h4>Maximum Loss</h4>
                 <div class="value">${risk_results.max_loss:,.2f}M</div>
-                <div style="color: #888; font-size: 0.8rem;">Simulated worst case</div>
+                <div style="color: #666666; font-size: 0.8rem;">Simulated worst case</div>
             </div>
             """,
             unsafe_allow_html=True,
@@ -705,7 +736,7 @@ if page == "📊 Portfolio Metrics":
 elif page == "🏢 New Company Simulation":
     st.markdown("# New Company Risk Assessment")
     st.markdown(
-        '<p style="color: #888; font-size: 1.1rem;">Calculate individual premium for a new company seeking AI risk coverage</p>',
+        '<p style="color: #a0a0a0; font-size: 1.1rem;">Calculate individual premium for a new company seeking AI risk coverage</p>',
         unsafe_allow_html=True,
     )
     
@@ -811,8 +842,8 @@ elif page == "🏢 New Company Simulation":
             r=values,
             theta=categories_closed,
             fill="toself",
-            fillcolor="rgba(0, 212, 255, 0.2)",
-            line=dict(color="#00d4ff", width=2),
+            fillcolor="rgba(201, 169, 98, 0.2)",
+            line=dict(color="#c9a962", width=2),
             name="Risk Profile",
         ))
         
@@ -822,14 +853,16 @@ elif page == "🏢 New Company Simulation":
                 radialaxis=dict(
                     visible=True,
                     range=[0, 1],
-                    gridcolor="rgba(42,42,74,0.5)",
-                    linecolor="#2a2a4a",
+                    gridcolor="rgba(42,42,42,0.4)",
+                    linecolor="#2a2a2a",
+                    tickfont=dict(color="#a0a0a0"),
                 ),
                 angularaxis=dict(
-                    gridcolor="rgba(42,42,74,0.5)",
-                    linecolor="#2a2a4a",
+                    gridcolor="rgba(42,42,42,0.4)",
+                    linecolor="#2a2a2a",
+                    tickfont=dict(color="#a0a0a0"),
                 ),
-                bgcolor="rgba(26,26,46,0.4)",
+                bgcolor="rgba(15,15,15,0.6)",
             ),
             height=350,
             showlegend=False,
@@ -878,11 +911,11 @@ elif page == "🏢 New Company Simulation":
             st.markdown(
                 f"""
                 <div class="premium-highlight" style="text-align: center;">
-                    <h4 style="color: #888; margin-bottom: 0.5rem;">TECHNICAL PREMIUM</h4>
-                    <div style="font-size: 3rem; color: #00d4ff; font-family: Monaco, monospace; font-weight: 700;">
+                    <h4 style="color: #a0a0a0; margin-bottom: 0.5rem;">TECHNICAL PREMIUM</h4>
+                    <div style="font-size: 3rem; color: #c9a962; font-family: 'JetBrains Mono', monospace; font-weight: 600;">
                         ${result.standalone_premium:,.2f}M
                     </div>
-                    <div style="color: #888; margin-top: 0.5rem;">
+                    <div style="color: #a0a0a0; margin-top: 0.5rem;">
                         Rate on Line: {result.rate_on_line:.2f}%
                     </div>
                 </div>
@@ -903,9 +936,9 @@ elif page == "🏢 New Company Simulation":
                 labels=list(components.keys()),
                 values=list(components.values()),
                 hole=0.6,
-                marker=dict(colors=["#00d4ff", "#7b68ee", "#ffc107"]),
+                marker=dict(colors=["#c9a962", "#e4c87a", "#f59e0b"]),
                 textinfo="label+percent",
-                textfont=dict(color="#e8e8e8"),
+                textfont=dict(color="#f5f5f5"),
             )])
             
             fig_breakdown = apply_dark_theme(fig_breakdown)
@@ -916,7 +949,7 @@ elif page == "🏢 New Company Simulation":
                     text=f"${result.standalone_premium:,.1f}M",
                     x=0.5, y=0.5,
                     font_size=16,
-                    font_color="#00d4ff",
+                    font_color="#c9a962",
                     showarrow=False,
                 )],
             )
@@ -939,7 +972,7 @@ elif page == "🏢 New Company Simulation":
                     <div class="metric-card">
                         <h4>{label}</h4>
                         <div class="value" style="font-size: 1.5rem;">{value}</div>
-                        <div style="color: #666; font-size: 0.75rem;">{description}</div>
+                        <div style="color: #666666; font-size: 0.75rem;">{description}</div>
                     </div>
                     """,
                     unsafe_allow_html=True,
@@ -947,9 +980,9 @@ elif page == "🏢 New Company Simulation":
         
         # Safety investment analysis
         st.markdown("---")
-        st.markdown("### 🛡️ Safety Investment ROI Analysis")
+        st.markdown("### Safety Investment ROI Analysis")
         st.markdown(
-            '<p style="color: #888;">See how improving safety practices can reduce your premium and unlock capital for AI safety investments</p>',
+            '<p style="color: #a0a0a0;">See how improving safety practices can reduce your premium and unlock capital for AI safety investments</p>',
             unsafe_allow_html=True,
         )
         
@@ -974,10 +1007,10 @@ elif page == "🏢 New Company Simulation":
             
             st.markdown(
                 f"""
-                <div class="metric-card" style="background: linear-gradient(135deg, rgba(0, 212, 170, 0.2) 0%, rgba(22, 33, 62, 0.9) 100%);">
+                <div class="metric-card" style="background: linear-gradient(135deg, rgba(34, 197, 94, 0.1) 0%, rgba(15, 15, 15, 0.9) 100%);">
                     <h4>Annual Premium Savings</h4>
-                    <div class="value" style="color: #00d4aa;">${benefit['premium_reduction']:,.2f}M</div>
-                    <div style="color: #00d4aa; font-size: 0.9rem;">↓ {benefit['reduction_percentage']:.1f}% reduction</div>
+                    <div class="value" style="color: #22c55e;">${benefit['premium_reduction']:,.2f}M</div>
+                    <div style="color: #22c55e; font-size: 0.9rem;">↓ {benefit['reduction_percentage']:.1f}% reduction</div>
                 </div>
                 """,
                 unsafe_allow_html=True,
@@ -1013,8 +1046,8 @@ elif page == "🏢 New Company Simulation":
                 x=[f"+{i:.0%}" for i in improvements],
                 y=premiums,
                 mode="lines+markers",
-                line=dict(color="#00d4aa", width=3),
-                marker=dict(size=10, color="#00d4aa"),
+                line=dict(color="#22c55e", width=3),
+                marker=dict(size=10, color="#22c55e"),
                 name="Premium",
             ))
             
@@ -1022,8 +1055,9 @@ elif page == "🏢 New Company Simulation":
             fig_safety.add_hline(
                 y=result.standalone_premium,
                 line_dash="dash",
-                line_color="#ff6b6b",
+                line_color="#ef4444",
                 annotation_text="Current Premium",
+                annotation_font=dict(color="#ef4444"),
             )
             
             fig_safety = apply_dark_theme(fig_safety)
@@ -1085,8 +1119,8 @@ elif page == "🏢 New Company Simulation":
 st.markdown("---")
 st.markdown(
     """
-    <div style="text-align: center; color: #444; padding: 2rem;">
-        <p style="font-size: 0.9rem;">
+    <div style="text-align: center; color: #666666; padding: 2rem;">
+        <p style="font-size: 0.9rem; color: #a0a0a0;">
             AI Catastrophe Risk Pricing Engine | Quantifying Systemic AI Risk
         </p>
         <p style="font-size: 0.75rem;">

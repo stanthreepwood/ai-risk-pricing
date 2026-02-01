@@ -12,10 +12,12 @@ dependencies = [
     "networkx>=3.2.0",
     "matplotlib>=3.8.0",
     "pyyaml>=6.0.3",
+    "streamlit>=1.40.0",
+    "plotly>=5.24.0",
 ]
 
 [project.scripts]
-ai-risk-pricing = "ai_risk_pricing.main:main"
+ai-risk-pricing = "ai_risk_pricing.main:cli"
 
 [build-system]
 requires = ["hatchling"]

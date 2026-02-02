@@ -8,6 +8,8 @@ AI governance Apart Hackaton, 2026.
   <img src="https://yt3.googleusercontent.com/a62bOMN7EEnjW0F992zUvj4BBFpHwpfwVpPPbdpSGeQu9s6mw7bE_uqow5AY6NsgVwC0sclyUA=w1707-fcrop64=1,00005a57ffffa5a8-k-c0xffffffff-no-nd-rj" alt="Apart Header" style="max-width: 100%; height: auto;">
 </p>
 
+For more details, check the website: https://pricing-ai-risks.netlify.app/
+
 ## Overview
 
 This model implements a complete catastrophe pricing workflow similar to those used by reinsurance analytics teams:

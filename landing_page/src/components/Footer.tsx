@@ -8,7 +8,7 @@ const Footer = () => {
           <div className={styles.brand}>
             <div className={styles.logo}>
               <span className={styles.logoIcon}>◈</span>
-              <span className={styles.logoText}>AI Risk Pricing</span>
+              <span className={styles.logoText}>Pricing AI Risk</span>
             </div>
             <p className={styles.tagline}>
               Actuarial-grade catastrophe modeling for the AI era.
@@ -18,23 +18,17 @@ const Footer = () => {
           <div className={styles.links}>
             <div className={styles.linkGroup}>
               <h4 className={styles.linkTitle}>Documentation</h4>
-              <a href="#" className={styles.link}>Getting Started</a>
-              <a href="#" className={styles.link}>API Reference</a>
-              <a href="#" className={styles.link}>Examples</a>
+              <a href="https://github.com/your-org/ai-risk-pricing" className={styles.link}>Getting Started</a>
             </div>
             
             <div className={styles.linkGroup}>
               <h4 className={styles.linkTitle}>Model</h4>
-              <a href="#features" className={styles.link}>Features</a>
               <a href="#how-it-works" className={styles.link}>Methodology</a>
-              <a href="#" className={styles.link}>Assumptions</a>
             </div>
             
             <div className={styles.linkGroup}>
               <h4 className={styles.linkTitle}>Community</h4>
               <a href="https://github.com/your-org/ai-risk-pricing" className={styles.link}>GitHub</a>
-              <a href="#" className={styles.link}>Discussions</a>
-              <a href="#" className={styles.link}>Contributing</a>
             </div>
           </div>
         </div>

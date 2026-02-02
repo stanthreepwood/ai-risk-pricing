@@ -356,11 +356,11 @@ class ScenarioGenerator:
             },
         )
     
-    def get_all_scenarios(self, include_known_knowns: bool = True, include_known_unks: bool = True, include_dark: bool = True) -> list[Scenario]:
+    def get_all_scenarios(self, include_known_knowns: bool = True, include_known_unknowns: bool = True, include_dark: bool = True) -> list[Scenario]:
         scenarios = self.get_predefined_scenarios()
         if include_dark:
             scenarios.append(self.get_dark_scenario())
-        if include_known_unks:
+        if include_known_unknowns:
             scenarios.extend(ku_dummy_llm_scenarios)
         if include_known_knowns:
             scenarios.extend(create_aggregated_scenarios(known_knowns_scenarios))

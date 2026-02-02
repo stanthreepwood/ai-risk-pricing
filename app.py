@@ -25,18 +25,13 @@ from ai_risk_pricing.safety import (
     build_profile_from_selections,
 )
 
-# =============================================================================
-# PAGE CONFIG & STYLING
-# =============================================================================
-
 st.set_page_config(
-    page_title="AI Risk Pricing Engine",
+    page_title="Pricing AI Risk",
     page_icon="⚡",
     layout="wide",
     initial_sidebar_state="expanded",
 )
 
-# Custom dark actuarial theme - matching landing page gold/black palette
 DARK_THEME = """
 <style>
     /* Import Inter and JetBrains Mono fonts */
@@ -110,6 +105,19 @@ DARK_THEME = """
     /* Sliders */
     .stSlider > div > div {
         background-color: #2a2a2a !important;
+    }
+    .stSlider [data-baseweb="slider"] [data-testid="stThumbValue"] {
+        color: #f59e0b !important;
+    }
+    .stSlider [data-baseweb="slider"] > div:first-child {
+        background: linear-gradient(to right, #f59e0b 0%, #f59e0b var(--slider-fill, 0%), #2a2a2a var(--slider-fill, 0%), #2a2a2a 100%) !important;
+    }
+    .stSlider [data-baseweb="slider"] > div > div[role="slider"] {
+        background-color: #f59e0b !important;
+        border-color: #f59e0b !important;
+    }
+    .stSlider [data-baseweb="slider"] > div > div[role="slider"]:focus {
+        box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.3) !important;
     }
     
     /* Selectbox */
@@ -223,9 +231,6 @@ DARK_THEME = """
 
 st.markdown(DARK_THEME, unsafe_allow_html=True)
 
-# =============================================================================
-# PLOTLY DARK THEME
-# =============================================================================
 
 PLOTLY_TEMPLATE = {
     "layout": {
@@ -262,10 +267,6 @@ def apply_dark_theme(fig: go.Figure) -> go.Figure:
     return fig
 
 
-# =============================================================================
-# HELPER FUNCTIONS
-# =============================================================================
-
 @st.cache_data(ttl=3600)
 def run_portfolio_simulation(
     n_companies: int,
@@ -277,10 +278,8 @@ def run_portfolio_simulation(
 ) -> tuple:
     """Run full portfolio simulation (cached for performance)."""
     
-    # Build portfolio
     portfolio = Portfolio.build_sample_portfolio(n_companies=n_companies, seed=seed)
     
-    # Generate scenarios
     generator = ScenarioGenerator(rng=np.random.default_rng(seed))
     scenarios = generator.get_all_scenarios(
         include_dark=include_dark,
@@ -288,14 +287,12 @@ def run_portfolio_simulation(
         include_known_unknowns=include_known_unknowns,
     )
     
-    # Build dependency graph
     aggregator = PortfolioAggregator(portfolio)
     graph = aggregator.build_dependency_graph_from_portfolio(
         n_foundation_models=2,
         n_saas_providers=4,
     )
     
-    # Run simulation
     config = DEFAULT_CONFIG
     engine = MonteCarloEngine(
         scenarios=scenarios,
@@ -306,11 +303,9 @@ def run_portfolio_simulation(
     
     result = engine.simulate_years_vectorized(n_years=n_years)
     
-    # Calculate metrics
     metrics = RiskMetrics(result.year_loss_table)
     risk_results = metrics.calculate_all(portfolio.total_exposure)
     
-    # Calculate premium
     calculator = PremiumCalculator(
         risk_metrics=metrics,
         total_exposure=portfolio.total_exposure,
@@ -344,13 +339,8 @@ def create_metric_card(label: str, value: str, delta: str = None, delta_color: s
     </div>
     """
 
-
-# =============================================================================
-# SIDEBAR
-# =============================================================================
-
 with st.sidebar:
-    st.markdown("## ⚡ AI Risk Engine")
+    st.markdown("## ⚡ AI Risk Quantification Engine")
     st.markdown("---")
     
     # Navigation
@@ -384,6 +374,18 @@ with st.sidebar:
         help="Inject extreme tail events for stress testing",
     )
     
+    include_known_knowns = st.toggle(
+        "Include Known Knowns",
+        value=False,
+        help="Include MIT AI reported incidents",
+    )
+    
+    include_known_unknowns = st.toggle(
+        "Include Known Unknowns",
+        value=False,
+        help="Include regulatory frameworks and policy reports",
+    )
+    
     seed = st.number_input(
         "Random Seed",
         min_value=1,
@@ -394,7 +396,6 @@ with st.sidebar:
     
     st.markdown("---")
     
-    # Pricing Parameters
     with st.expander("⚙️ Pricing Parameters"):
         ambiguity_load = st.slider(
             "Ambiguity Load (α)",
@@ -418,17 +419,15 @@ with st.sidebar:
     st.markdown(
         """
         <div style="text-align: center; color: #666666; font-size: 0.75rem;">
-            <span style="color: #c9a962;">AI Catastrophe Model</span> v0.1<br>
-            Quantifying the Unquantifiable
+            <span style="color: #c9a962;">Pricing AI Risk</span> v0.1<br>
+            Making AI Safety Investable
         </div>
         """,
         unsafe_allow_html=True,
     )
 
 
-# =============================================================================
 # PAGE 1: PORTFOLIO METRICS
-# =============================================================================
 
 if page == "📊 Portfolio Metrics":
     st.markdown("# Portfolio Risk Analytics")
@@ -437,7 +436,6 @@ if page == "📊 Portfolio Metrics":
         unsafe_allow_html=True,
     )
     
-    # Run simulation
     with st.spinner("Running Monte Carlo simulation..."):
         (
             portfolio,
@@ -447,9 +445,8 @@ if page == "📊 Portfolio Metrics":
             risk_results,
             premium_breakdown,
             risk_metrics,
-        ) = run_portfolio_simulation(n_companies, n_years, include_dark, seed)
+        ) = run_portfolio_simulation(n_companies, n_years, include_dark, include_known_knowns, include_known_unknowns, seed)
     
-    # Top-level metrics
     st.markdown("---")
     
     col1, col2, col3, col4 = st.columns(4)
@@ -482,7 +479,6 @@ if page == "📊 Portfolio Metrics":
             delta=f"{premium_breakdown.rate_on_line:.2f}% RoL",
         )
     
-    # Premium breakdown and exceedance curve
     st.markdown("---")
     
     col_left, col_right = st.columns([1, 1.5])
@@ -490,7 +486,6 @@ if page == "📊 Portfolio Metrics":
     with col_left:
         st.markdown("### Premium Breakdown")
         
-        # Premium waterfall chart
         premium_data = {
             "Component": ["Expected Loss", "Ambiguity Load", "Expense Load", "Total Premium"],
             "Amount": [
@@ -503,7 +498,6 @@ if page == "📊 Portfolio Metrics":
         
         fig_premium = go.Figure()
         
-        # Waterfall-style bars - gold palette
         colors = ["#c9a962", "#e4c87a", "#f59e0b", "#22c55e"]
         
         fig_premium.add_trace(go.Bar(
@@ -525,7 +519,6 @@ if page == "📊 Portfolio Metrics":
         
         st.plotly_chart(fig_premium, use_container_width=True)
         
-        # Key ratios
         st.markdown("#### Key Ratios")
         ratio_col1, ratio_col2 = st.columns(2)
         with ratio_col1:
@@ -555,7 +548,7 @@ if page == "📊 Portfolio Metrics":
             name="EP Curve",
         ))
         
-        # Add VaR markers with rotated annotations to avoid overlap
+        # add VaR markers with rotated annotations to avoid overlap
         fig_ep.add_vline(
             x=risk_results.var_99, 
             line_dash="dash", 
@@ -587,14 +580,12 @@ if page == "📊 Portfolio Metrics":
         
         st.plotly_chart(fig_ep, use_container_width=True)
     
-    # Portfolio composition and scenario analysis
     st.markdown("---")
     st.markdown("### Portfolio Composition & Scenario Analysis")
     
     tab1, tab2, tab3 = st.tabs(["📈 Sector Exposure", "🎯 Scenario Breakdown", "🏢 Company Details"])
     
     with tab1:
-        # Sector exposure pie chart
         sector_exposure = portfolio.exposure_by_sector()
         
         fig_sector = go.Figure(data=[go.Pie(
@@ -627,7 +618,6 @@ if page == "📊 Portfolio Metrics":
             st.metric("Max Company Exposure", f"${summary['max_exposure_M']:,.0f}M")
     
     with tab2:
-        # Scenario contribution analysis
         if sim_result.scenario_losses:
             scenario_el = {
                 name: float(np.mean(losses))
@@ -677,7 +667,7 @@ if page == "📊 Portfolio Metrics":
             hide_index=True,
         )
     
-    # Risk metrics summary
+
     st.markdown("---")
     st.markdown("### Risk Metrics Summary")
     
@@ -732,9 +722,7 @@ if page == "📊 Portfolio Metrics":
         )
 
 
-# =============================================================================
 # PAGE 2: NEW COMPANY SIMULATION
-# =============================================================================
 
 elif page == "🏢 New Company Simulation":
     st.markdown("# New Company Risk Assessment")
@@ -745,7 +733,6 @@ elif page == "🏢 New Company Simulation":
     
     st.markdown("---")
     
-    # Company input form
     col_form, col_viz = st.columns([1, 1.5])
     
     with col_form:
@@ -830,7 +817,7 @@ elif page == "🏢 New Company Simulation":
                 display_name, help_text = surface_config[surface]
                 providers = ["None"] + registry.list_providers(surface)
                 
-                # Alternate between columns
+                # alternate between columns
                 col = safety_col1 if i % 2 == 0 else safety_col2
                 
                 with col:
@@ -845,7 +832,6 @@ elif page == "🏢 New Company Simulation":
                     if selection != "None":
                         safety_selections[surface.value] = selection
         
-        # Build safety profile from selections
         if safety_selections:
             safety_profile = build_profile_from_selections(safety_selections)
             safety_score = safety_profile.overall_score
@@ -853,7 +839,7 @@ elif page == "🏢 New Company Simulation":
             safety_profile = SafetyProfile.empty()
             safety_score = 0.0
         
-        # Show computed safety score
+        # show computed safety score
         n_tools = len(safety_selections)
         if n_tools > 0:
             st.markdown(
@@ -889,7 +875,6 @@ elif page == "🏢 New Company Simulation":
         calculate_btn = st.button("⚡ Calculate Premium", use_container_width=True)
     
     with col_viz:
-        # Create company object with safety profile
         company = Company(
             name=company_name,
             revenue=revenue,
@@ -900,7 +885,6 @@ elif page == "🏢 New Company Simulation":
             safety_profile=safety_profile if safety_selections else None,
         )
         
-        # Risk radar chart
         st.markdown("### Risk Profile Visualization")
         
         fig_radar = go.Figure()
@@ -913,7 +897,7 @@ elif page == "🏢 New Company Simulation":
             1 - safety_score,
             min(1.0, company.exposure / revenue),  # Normalized exposure
         ]
-        values.append(values[0])  # Close the polygon
+        values.append(values[0])
         categories_closed = categories + [categories[0]]
         
         fig_radar.add_trace(go.Scatterpolar(
@@ -980,7 +964,6 @@ elif page == "🏢 New Company Simulation":
             else:
                 result = calculator.calculate_premium(company)
         
-        # Premium results
         st.markdown("---")
         
         result_col1, result_col2 = st.columns([1, 1])
@@ -1003,7 +986,6 @@ elif page == "🏢 New Company Simulation":
             
             st.markdown("### Premium Components")
             
-            # Premium breakdown chart
             components = {
                 "Expected Loss": result.expected_loss_component,
                 "Ambiguity Load": result.ambiguity_load_component,
@@ -1056,7 +1038,6 @@ elif page == "🏢 New Company Simulation":
                     unsafe_allow_html=True,
                 )
         
-        # Show mitigation impact if safety tools are selected
         if safety_selections and safety_profile.measures:
             st.markdown("---")
             st.markdown("### 🛡️ Safety Tools Impact Analysis")
@@ -1085,7 +1066,6 @@ elif page == "🏢 New Company Simulation":
             mitigation_col1, mitigation_col2 = st.columns([1.2, 1])
             
             with mitigation_col1:
-                # Mitigation bar chart
                 scenario_names = [d["Scenario"].replace(" ", "\n") for d in mitigation_data]
                 reductions = [d["Risk Reduction"] * 100 for d in mitigation_data]
                 
@@ -1148,9 +1128,7 @@ elif page == "🏢 New Company Simulation":
                             unsafe_allow_html=True,
                         )
                 
-                # Show uncovered surfaces as a warning
                 uncovered = safety_profile.uncovered_surfaces
-                # Remove "other" from uncovered as it's not typically needed
                 uncovered = {s for s in uncovered if s != RiskSurface.OTHER}
                 
                 if uncovered:
@@ -1158,7 +1136,6 @@ elif page == "🏢 New Company Simulation":
                     uncovered_names = [s.value.replace("_", " ").title() for s in uncovered]
                     st.warning(f"Consider adding: {', '.join(uncovered_names[:4])}")
         
-        # Safety investment analysis
         st.markdown("---")
         st.markdown("### Safety Investment ROI Analysis")
         st.markdown(
@@ -1178,7 +1155,7 @@ elif page == "🏢 New Company Simulation":
                 help="How much could safety practices improve?",
             )
             
-            # Calculate safety benefit
+            # calculate safety benefit
             benefit = estimate_safety_investment_benefit(
                 company=company,
                 safety_improvement=safety_improvement,
@@ -1209,7 +1186,6 @@ elif page == "🏢 New Company Simulation":
             )
         
         with safety_col2:
-            # Safety investment curve
             improvements = np.linspace(0.05, 0.35, 7)
             premiums = []
             
@@ -1231,7 +1207,6 @@ elif page == "🏢 New Company Simulation":
                 name="Premium",
             ))
             
-            # Add current premium line
             fig_safety.add_hline(
                 y=result.standalone_premium,
                 line_dash="dash",
@@ -1250,7 +1225,6 @@ elif page == "🏢 New Company Simulation":
             
             st.plotly_chart(fig_safety, use_container_width=True)
         
-        # Actuarial notes
         st.markdown("---")
         with st.expander("📝 Actuarial Notes & Methodology"):
             st.markdown(
@@ -1292,21 +1266,17 @@ elif page == "🏢 New Company Simulation":
             )
 
 
-# =============================================================================
-# FOOTER
-# =============================================================================
-
-st.markdown("---")
-st.markdown(
-    """
-    <div style="text-align: center; color: #666666; padding: 2rem;">
-        <p style="font-size: 0.9rem; color: #a0a0a0;">
-            AI Catastrophe Risk Pricing Engine | Quantifying Systemic AI Risk
-        </p>
-        <p style="font-size: 0.75rem;">
-            Built for actuaries and risk managers navigating the frontier of AI risk transfer
-        </p>
-    </div>
-    """,
-    unsafe_allow_html=True,
-)
+##st.markdown("---")
+##st.markdown(
+##    """
+##    <div style="text-align: center; color: #666666; padding: 2rem;">
+##        <p style="font-size: 0.9rem; color: #a0a0a0;">
+##            AI Catastrophe Risk Pricing Engine | Quantifying Systemic AI Risk
+##        </p>
+##        <p style="font-size: 0.75rem;">
+##            No One Thanks You for Disasters That Never Happened
+##        </p>
+##    </div>
+##    """,
+##    unsafe_allow_html=True,
+##)

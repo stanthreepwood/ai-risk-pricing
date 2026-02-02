@@ -5,8 +5,8 @@ const features = [
   {
     icon: '◈',
     title: 'Scenario-Based Modeling',
-    description: 'Five distinct AI failure modes: Foundation Model Failure, Adversarial Attacks, Alignment Failures, Regulatory Shocks, and Supply Chain Compromises.',
-    highlight: 'No historical data required',
+    description: 'Frontier AI incidents, regulatory frameworks and policy reports.',
+    highlight: 'Known knowns and known unknowns',
   },
   {
     icon: '∿',

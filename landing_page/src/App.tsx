@@ -1,7 +1,6 @@
 import { motion } from 'framer-motion'
 import Hero from './components/Hero'
 import Features from './components/Features'
-import Metrics from './components/Metrics'
 import HowItWorks from './components/HowItWorks'
 import CallToAction from './components/CallToAction'
 import Footer from './components/Footer'

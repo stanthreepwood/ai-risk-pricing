@@ -271,6 +271,8 @@ def run_portfolio_simulation(
     n_companies: int,
     n_years: int,
     include_dark: bool,
+    include_known_knowns: bool,
+    include_known_unknowns: bool,
     seed: int,
 ) -> tuple:
     """Run full portfolio simulation (cached for performance)."""
@@ -280,7 +282,11 @@ def run_portfolio_simulation(
     
     # Generate scenarios
     generator = ScenarioGenerator(rng=np.random.default_rng(seed))
-    scenarios = generator.get_all_scenarios(include_dark=include_dark)
+    scenarios = generator.get_all_scenarios(
+        include_dark=include_dark,
+        include_known_knowns=include_known_knowns,
+        include_known_unknowns=include_known_unknowns,
+    )
     
     # Build dependency graph
     aggregator = PortfolioAggregator(portfolio)

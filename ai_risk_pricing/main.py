@@ -42,25 +42,20 @@ def build_sample_portfolio(n_companies: int = 15, seed: int = 42) -> Portfolio:
     return portfolio
 
 
-def generate_scenarios(include_dark: bool = False, seed: int = 42) -> list:
-    """
-    Generate catastrophe scenarios for simulation.
-    
-    Uses predefined frontier AI scenarios calibrated through expert
-    judgment. Optionally includes a dark (extreme tail) scenario
-    for stress testing.
-    
-    Args:
-        include_dark: Whether to include the extreme tail scenario.
-        seed: Random seed for reproducibility.
-    
-    Returns:
-        List of Scenario objects ready for simulation.
-    """
+def generate_scenarios(
+    include_dark: bool = False,
+    seed: int = 42,
+    include_known_knowns: bool = True,
+    include_known_unknowns: bool = True,
+) -> list:
     print("\nGenerating catastrophe scenarios...")
     
     generator = ScenarioGenerator(rng=np.random.default_rng(seed))
-    scenarios = generator.get_all_scenarios(include_dark=include_dark)
+    scenarios = generator.get_all_scenarios(
+        include_dark=include_dark,
+        include_known_knowns=include_known_knowns,
+        include_known_unknowns=include_known_unknowns,
+    )
     
     print(f"  Generated {len(scenarios)} scenarios:")
     for s in scenarios:
@@ -149,6 +144,8 @@ def main(
     n_companies: int = 15,
     n_years: int = 100_000,
     dark_mode: bool = False,
+    include_known_knowns: bool = True,
+    include_known_unknowns: bool = True,
     output_dir: str | None = None,
     show_plot: bool = True,
     seed: int = 42,
@@ -179,7 +176,12 @@ def main(
     
     portfolio = build_sample_portfolio(n_companies=n_companies, seed=seed)
     
-    scenarios = generate_scenarios(include_dark=dark_mode, seed=seed)
+    scenarios = generate_scenarios(
+        include_dark=dark_mode, 
+        seed=seed, 
+        include_known_knowns=include_known_knowns, 
+        include_known_unknowns=include_known_unknowns,
+    )
     
     graph = build_dependency_graph(portfolio)
 
@@ -223,7 +225,7 @@ def main(
     fig_oep = plot_oep(oep_losses)
     fig_rp = plot_return_period(losses)
 
-    # Capital adequacy grid anchored to tail losses
+    # capital adequacy grid anchored to tail losses
     cap_max = float(np.quantile(losses, 0.999) * 1.25) if np.any(losses > 0) else 1.0
     capital_range = np.linspace(0.0, max(1.0, cap_max), 60)
     fig_ruin = plot_ruin_probability(losses, capital_range)
@@ -300,6 +302,16 @@ def cli() -> None:
         help="Number of simulation years",
     )
     parser.add_argument(
+        "--include-known-knowns",
+        action="store_true",
+        help="Include known knowns",
+    )
+    parser.add_argument(
+        "--include-known-unknowns",
+        action="store_true",
+        help="Include known unknowns",
+    )
+    parser.add_argument(
         "--dark-mode",
         action="store_true",
         help="Enable dark scenario (extreme tail event injection)",
@@ -329,6 +341,8 @@ def cli() -> None:
         n_companies=args.companies,
         n_years=args.years,
         dark_mode=args.dark_mode,
+        include_known_knowns=args.include_known_knowns,
+        include_known_unknowns=args.include_known_unknowns,
         output_dir=args.output_dir,
         show_plot=args.show_plots,
         seed=args.seed,

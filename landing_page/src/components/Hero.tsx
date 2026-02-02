@@ -28,21 +28,27 @@ const Hero = () => {
           </div>
           
           <h1 className={styles.title}>
-            <span className={styles.titleLine}>Quantify</span>
-            <span className={`${styles.titleLine} ${styles.titleAccent}`}>AI Risk</span>
+            <span className={styles.titleLine}>No One Thanks You</span>
+            <span className={`${styles.titleLine} ${styles.titleAccent}`}> for Disasters That Never Happened</span>
           </h1>
           
-          <p className={styles.subtitle}>
+          {/*<p className={styles.subtitle}>
             Actuarial-grade catastrophe modeling for AI systems.
             <br />
             <span className={styles.subtitleHighlight}>
               Correlations. Tail Risk. Capital Allocation.
             </span>
+          </p>*/}
+
+          <p className={styles.subtitle}>
+            <span className={styles.subtitleHighlight}>
+            Pricing AI Risk While Making AI Safety Investable
+            </span>
           </p>
           
           <p className={styles.description}>
-            Model systemic AI failures with Monte Carlo simulation, heavy-tailed distributions, 
-            and dependency graphs — unlocking informed capital allocation for AI safety investments.
+            Model systemic AI failures from Known Knowns and Known Unknowns with Monte Carlo simulation, heavy-tailed distributions
+            and systemic dependency graphs.
           </p>
           
           <div className={styles.cta}>
@@ -79,11 +85,11 @@ const Hero = () => {
             <div className={styles.statDivider} />
             <div className={styles.stat}>
               <span className={styles.statValue}>TVaR<sub>99</sub></span>
-              <span className={styles.statLabel}>Tail Risk Metric</span>
+              <span className={styles.statLabel}>Tail Risk Estimation</span>
             </div>
             <div className={styles.statDivider} />
             <div className={styles.stat}>
-              <span className={styles.statValue}>5</span>
+              <span className={styles.statValue}>100+</span>
               <span className={styles.statLabel}>Scenario Types</span>
             </div>
           </div>

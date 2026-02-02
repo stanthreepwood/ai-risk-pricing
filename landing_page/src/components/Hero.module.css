@@ -42,7 +42,7 @@
 }
 
 .title {
-  font-size: clamp(3.5rem, 8vw, 6rem);
+  font-size: clamp(3.3rem, 8vw, 4.1rem);
   font-weight: 700;
   line-height: 1;
   letter-spacing: -0.03em;

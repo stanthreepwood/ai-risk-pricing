@@ -14,17 +14,16 @@ const CallToAction = () => {
         >
           <div className={styles.glow} />
           
-          <span className={styles.preheader}>Unlock AI Safety Investments</span>
+          <span className={styles.preheader}>AI Insurance and Reinsurance for AI Safety</span>
           
           <h2 className={styles.title}>
-            Quantify the
+            Pricing AI Risk
             <br />
-            <span className={styles.titleAccent}>Unquantifiable</span>
+            <span className={styles.titleAccent}>While Making AI Safety Investable</span>
           </h2>
           
           <p className={styles.description}>
             Transform AI catastrophe risk from an abstract concern into actionable capital allocation decisions.
-            Model correlations, capture tail risk, and enable informed safety investments.
           </p>
           
           <div className={styles.cta}>
@@ -41,7 +40,7 @@ const CallToAction = () => {
             </motion.a>
           </div>
           
-          <div className={styles.features}>
+          {/*<div className={styles.features}>
             <div className={styles.feature}>
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
@@ -63,7 +62,7 @@ const CallToAction = () => {
               </svg>
               <span>Actuarial Standards</span>
             </div>
-          </div>
+          </div>*/}
         </motion.div>
       </div>
     </section>

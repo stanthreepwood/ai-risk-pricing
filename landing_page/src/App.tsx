@@ -17,9 +17,9 @@ function App() {
         transition={{ duration: 0.6 }}
       >
         <Hero />
-        <Features />
-        <Metrics />
         <HowItWorks />
+        <Features />
+        {/*<Metrics />*/}
         <CallToAction />
         <Footer />
       </motion.main>

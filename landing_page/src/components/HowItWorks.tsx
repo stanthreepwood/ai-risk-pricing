@@ -5,7 +5,7 @@ const steps = [
   {
     number: '01',
     title: 'Define Scenarios',
-    description: 'Specify AI failure modes with frequency, severity distributions, and propagation characteristics. No historical data needed — expert judgment drives calibration.',
+    description: 'Specific AI failure modes with frequency, severity distributions, and propagation characteristics. From historical incident data, regulation frameworks and expert judgement.',
     details: ['Foundation Model Failures', 'Adversarial Attacks', 'Alignment Incidents', 'Regulatory Shocks', 'Supply Chain Compromise'],
   },
   {
@@ -28,9 +28,15 @@ const steps = [
   },
   {
     number: '05',
+    title: 'Pricing AI Safety Mitigation Measures. Discounted for risk reduction.',
+    description: 'From the Year Loss Tables, we can price the impact of AI safety mitigation measures. This is done by calculating the risk reduction for each scenario and scenario type, and then discounting the premium for the risk reduction.',
+    details: ['Risk Reduction', 'Discounted Premium', 'AI tools vendors'],
+  },
+  {
+    number: '06',
     title: 'Price with Ambiguity',
     description: 'Apply ambiguity loading to compensate for parameter uncertainty. The resulting premium enables informed capital allocation for AI safety.',
-    details: ['50% TVaR Ambiguity Load', 'Expense Loading', 'Rate on Line Calculation'],
+    details: ['TVaR Ambiguity Load', 'Expense Loading', 'Rate on Line Calculation'],
   },
 ]
 

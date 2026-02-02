@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='utf-8'?>
 <gexf xmlns="http://www.gexf.net/1.2draft" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.gexf.net/1.2draft http://www.gexf.net/1.2draft/gexf.xsd" version="1.2">
-  <meta lastmodifieddate="2026-02-01">
+  <meta lastmodifieddate="2026-02-02">
     <creator>NetworkX 3.6.1</creator>
   </meta>
   <graph defaultedgetype="directed" mode="static" name="">
@@ -139,6 +139,86 @@
           <attvalue for="3" value="1.2958326903819335" />
         </attvalues>
       </node>
+      <node id="enterprise_retail_co_11" label="enterprise_retail_co_11">
+        <attvalues>
+          <attvalue for="0" value="enterprise" />
+          <attvalue for="1" value="297.2555092811832" />
+          <attvalue for="2" value="0.6335393323162023" />
+          <attvalue for="3" value="1.2513994826605084" />
+        </attvalues>
+      </node>
+      <node id="enterprise_financial_services_co_12" label="enterprise_financial_services_co_12">
+        <attvalues>
+          <attvalue for="0" value="enterprise" />
+          <attvalue for="1" value="556.3199422811595" />
+          <attvalue for="2" value="0.7946932338757811" />
+          <attvalue for="3" value="1.2234206843430593" />
+        </attvalues>
+      </node>
+      <node id="enterprise_healthcare_co_13" label="enterprise_healthcare_co_13">
+        <attvalues>
+          <attvalue for="0" value="enterprise" />
+          <attvalue for="1" value="130.7214486137701" />
+          <attvalue for="2" value="0.45872866231599746" />
+          <attvalue for="3" value="1.2252522829571637" />
+        </attvalues>
+      </node>
+      <node id="enterprise_healthcare_co_14" label="enterprise_healthcare_co_14">
+        <attvalues>
+          <attvalue for="0" value="enterprise" />
+          <attvalue for="1" value="118.86828974958858" />
+          <attvalue for="2" value="0.2475695342576293" />
+          <attvalue for="3" value="1.1178398253009025" />
+        </attvalues>
+      </node>
+      <node id="enterprise_healthcare_co_15" label="enterprise_healthcare_co_15">
+        <attvalues>
+          <attvalue for="0" value="enterprise" />
+          <attvalue for="1" value="274.70725508998567" />
+          <attvalue for="2" value="0.6190020852799888" />
+          <attvalue for="3" value="1.1979621828151903" />
+        </attvalues>
+      </node>
+      <node id="enterprise_healthcare_co_16" label="enterprise_healthcare_co_16">
+        <attvalues>
+          <attvalue for="0" value="enterprise" />
+          <attvalue for="1" value="210.7682981225313" />
+          <attvalue for="2" value="0.47130435126775777" />
+          <attvalue for="3" value="1.1473231526934486" />
+        </attvalues>
+      </node>
+      <node id="enterprise_retail_co_17" label="enterprise_retail_co_17">
+        <attvalues>
+          <attvalue for="0" value="enterprise" />
+          <attvalue for="1" value="250.38549195280143" />
+          <attvalue for="2" value="0.6213638604105848" />
+          <attvalue for="3" value="1.2542598591675154" />
+        </attvalues>
+      </node>
+      <node id="enterprise_technology_co_18" label="enterprise_technology_co_18">
+        <attvalues>
+          <attvalue for="0" value="enterprise" />
+          <attvalue for="1" value="471.38245521173275" />
+          <attvalue for="2" value="0.8938385590951006" />
+          <attvalue for="3" value="1.314919563251839" />
+        </attvalues>
+      </node>
+      <node id="enterprise_financial_services_co_19" label="enterprise_financial_services_co_19">
+        <attvalues>
+          <attvalue for="0" value="enterprise" />
+          <attvalue for="1" value="314.40765551079556" />
+          <attvalue for="2" value="0.6427393159002506" />
+          <attvalue for="3" value="1.192802949004523" />
+        </attvalues>
+      </node>
+      <node id="enterprise_technology_co_20" label="enterprise_technology_co_20">
+        <attvalues>
+          <attvalue for="0" value="enterprise" />
+          <attvalue for="1" value="332.77132290058154" />
+          <attvalue for="2" value="0.8018741178091532" />
+          <attvalue for="3" value="1.3203319115687084" />
+        </attvalues>
+      </node>
     </nodes>
     <edges>
       <edge source="foundation_model_1" target="saas_provider_1" id="0" weight="0.8965797680120997" />
@@ -152,22 +232,42 @@
       <edge source="saas_provider_1" target="enterprise_retail_co_5" id="8" weight="0.7679255978730042" />
       <edge source="saas_provider_1" target="enterprise_healthcare_co_7" id="9" weight="0.8219057429987208" />
       <edge source="saas_provider_1" target="enterprise_technology_co_10" id="10" weight="0.782066151450534" />
-      <edge source="saas_provider_2" target="enterprise_technology_co_1" id="11" weight="0.7732195812969819" />
-      <edge source="saas_provider_2" target="enterprise_manufacturing_co_2" id="12" weight="0.7979048623631269" />
-      <edge source="saas_provider_2" target="enterprise_retail_co_3" id="13" weight="0.6878223245103232" />
-      <edge source="saas_provider_2" target="enterprise_healthcare_co_4" id="14" weight="0.5757885436337142" />
-      <edge source="saas_provider_2" target="enterprise_retail_co_5" id="15" weight="0.5907637396203537" />
-      <edge source="saas_provider_2" target="enterprise_retail_co_6" id="16" weight="0.7801060408008997" />
-      <edge source="saas_provider_2" target="enterprise_healthcare_co_7" id="17" weight="0.6549913516120698" />
-      <edge source="saas_provider_3" target="enterprise_technology_co_1" id="18" weight="0.5175215063148915" />
-      <edge source="saas_provider_3" target="enterprise_technology_co_8" id="19" weight="0.5559009934437239" />
-      <edge source="saas_provider_3" target="enterprise_technology_co_10" id="20" weight="0.8122916124087871" />
-      <edge source="saas_provider_4" target="enterprise_technology_co_1" id="21" weight="0.5617157968270191" />
-      <edge source="saas_provider_4" target="enterprise_retail_co_3" id="22" weight="0.6481838824139475" />
-      <edge source="saas_provider_4" target="enterprise_retail_co_6" id="23" weight="0.833071278423135" />
-      <edge source="saas_provider_4" target="enterprise_technology_co_8" id="24" weight="0.7729982015899902" />
-      <edge source="saas_provider_4" target="enterprise_healthcare_co_9" id="25" weight="0.5029449079004022" />
-      <edge source="saas_provider_4" target="enterprise_technology_co_10" id="26" weight="0.683566310215336" />
+      <edge source="saas_provider_1" target="enterprise_financial_services_co_12" id="11" weight="0.8059995429664102" />
+      <edge source="saas_provider_1" target="enterprise_healthcare_co_13" id="12" weight="0.6215800392250449" />
+      <edge source="saas_provider_1" target="enterprise_healthcare_co_16" id="13" weight="0.5935757943461363" />
+      <edge source="saas_provider_1" target="enterprise_retail_co_17" id="14" weight="0.7647666058907581" />
+      <edge source="saas_provider_1" target="enterprise_technology_co_18" id="15" weight="0.765725416130955" />
+      <edge source="saas_provider_1" target="enterprise_financial_services_co_19" id="16" weight="0.7889437402385802" />
+      <edge source="saas_provider_1" target="enterprise_technology_co_20" id="17" weight="0.5609248410852674" />
+      <edge source="saas_provider_2" target="enterprise_technology_co_1" id="18" weight="0.7732195812969819" />
+      <edge source="saas_provider_2" target="enterprise_manufacturing_co_2" id="19" weight="0.7979048623631269" />
+      <edge source="saas_provider_2" target="enterprise_retail_co_3" id="20" weight="0.6878223245103232" />
+      <edge source="saas_provider_2" target="enterprise_healthcare_co_4" id="21" weight="0.5757885436337142" />
+      <edge source="saas_provider_2" target="enterprise_retail_co_5" id="22" weight="0.5907637396203537" />
+      <edge source="saas_provider_2" target="enterprise_retail_co_6" id="23" weight="0.7801060408008997" />
+      <edge source="saas_provider_2" target="enterprise_healthcare_co_7" id="24" weight="0.6549913516120698" />
+      <edge source="saas_provider_2" target="enterprise_retail_co_11" id="25" weight="0.7673611847161887" />
+      <edge source="saas_provider_2" target="enterprise_financial_services_co_12" id="26" weight="0.7538873280002363" />
+      <edge source="saas_provider_2" target="enterprise_healthcare_co_15" id="27" weight="0.6634114574898544" />
+      <edge source="saas_provider_2" target="enterprise_technology_co_20" id="28" weight="0.7785281500310944" />
+      <edge source="saas_provider_3" target="enterprise_technology_co_1" id="29" weight="0.5175215063148915" />
+      <edge source="saas_provider_3" target="enterprise_technology_co_8" id="30" weight="0.5559009934437239" />
+      <edge source="saas_provider_3" target="enterprise_technology_co_10" id="31" weight="0.8122916124087871" />
+      <edge source="saas_provider_3" target="enterprise_retail_co_11" id="32" weight="0.5458120294143893" />
+      <edge source="saas_provider_3" target="enterprise_healthcare_co_14" id="33" weight="0.5123271338271758" />
+      <edge source="saas_provider_3" target="enterprise_retail_co_17" id="34" weight="0.6174375031066734" />
+      <edge source="saas_provider_3" target="enterprise_technology_co_18" id="35" weight="0.825608153866414" />
+      <edge source="saas_provider_3" target="enterprise_technology_co_20" id="36" weight="0.7004179100413455" />
+      <edge source="saas_provider_4" target="enterprise_technology_co_1" id="37" weight="0.5617157968270191" />
+      <edge source="saas_provider_4" target="enterprise_retail_co_3" id="38" weight="0.6481838824139475" />
+      <edge source="saas_provider_4" target="enterprise_retail_co_6" id="39" weight="0.833071278423135" />
+      <edge source="saas_provider_4" target="enterprise_technology_co_8" id="40" weight="0.7729982015899902" />
+      <edge source="saas_provider_4" target="enterprise_healthcare_co_9" id="41" weight="0.5029449079004022" />
+      <edge source="saas_provider_4" target="enterprise_technology_co_10" id="42" weight="0.683566310215336" />
+      <edge source="saas_provider_4" target="enterprise_financial_services_co_12" id="43" weight="0.7214317602631983" />
+      <edge source="saas_provider_4" target="enterprise_healthcare_co_15" id="44" weight="0.8413612293072665" />
+      <edge source="saas_provider_4" target="enterprise_technology_co_18" id="45" weight="0.6625547445760283" />
+      <edge source="saas_provider_4" target="enterprise_financial_services_co_19" id="46" weight="0.5360191443102567" />
     </edges>
   </graph>
 </gexf>

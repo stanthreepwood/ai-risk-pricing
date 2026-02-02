@@ -102,6 +102,66 @@
       <data key="d2">0.700173543906696</data>
       <data key="d3">1.2958326903819335</data>
     </node>
+    <node id="enterprise_retail_co_11">
+      <data key="d0">enterprise</data>
+      <data key="d1">297.2555092811832</data>
+      <data key="d2">0.6335393323162023</data>
+      <data key="d3">1.2513994826605084</data>
+    </node>
+    <node id="enterprise_financial_services_co_12">
+      <data key="d0">enterprise</data>
+      <data key="d1">556.3199422811595</data>
+      <data key="d2">0.7946932338757811</data>
+      <data key="d3">1.2234206843430593</data>
+    </node>
+    <node id="enterprise_healthcare_co_13">
+      <data key="d0">enterprise</data>
+      <data key="d1">130.7214486137701</data>
+      <data key="d2">0.45872866231599746</data>
+      <data key="d3">1.2252522829571637</data>
+    </node>
+    <node id="enterprise_healthcare_co_14">
+      <data key="d0">enterprise</data>
+      <data key="d1">118.86828974958858</data>
+      <data key="d2">0.2475695342576293</data>
+      <data key="d3">1.1178398253009025</data>
+    </node>
+    <node id="enterprise_healthcare_co_15">
+      <data key="d0">enterprise</data>
+      <data key="d1">274.70725508998567</data>
+      <data key="d2">0.6190020852799888</data>
+      <data key="d3">1.1979621828151903</data>
+    </node>
+    <node id="enterprise_healthcare_co_16">
+      <data key="d0">enterprise</data>
+      <data key="d1">210.7682981225313</data>
+      <data key="d2">0.47130435126775777</data>
+      <data key="d3">1.1473231526934486</data>
+    </node>
+    <node id="enterprise_retail_co_17">
+      <data key="d0">enterprise</data>
+      <data key="d1">250.38549195280143</data>
+      <data key="d2">0.6213638604105848</data>
+      <data key="d3">1.2542598591675154</data>
+    </node>
+    <node id="enterprise_technology_co_18">
+      <data key="d0">enterprise</data>
+      <data key="d1">471.38245521173275</data>
+      <data key="d2">0.8938385590951006</data>
+      <data key="d3">1.314919563251839</data>
+    </node>
+    <node id="enterprise_financial_services_co_19">
+      <data key="d0">enterprise</data>
+      <data key="d1">314.40765551079556</data>
+      <data key="d2">0.6427393159002506</data>
+      <data key="d3">1.192802949004523</data>
+    </node>
+    <node id="enterprise_technology_co_20">
+      <data key="d0">enterprise</data>
+      <data key="d1">332.77132290058154</data>
+      <data key="d2">0.8018741178091532</data>
+      <data key="d3">1.3203319115687084</data>
+    </node>
     <edge source="foundation_model_1" target="saas_provider_1">
       <data key="d4">0.8965797680120997</data>
     </edge>
@@ -135,6 +195,27 @@
     <edge source="saas_provider_1" target="enterprise_technology_co_10">
       <data key="d4">0.782066151450534</data>
     </edge>
+    <edge source="saas_provider_1" target="enterprise_financial_services_co_12">
+      <data key="d4">0.8059995429664102</data>
+    </edge>
+    <edge source="saas_provider_1" target="enterprise_healthcare_co_13">
+      <data key="d4">0.6215800392250449</data>
+    </edge>
+    <edge source="saas_provider_1" target="enterprise_healthcare_co_16">
+      <data key="d4">0.5935757943461363</data>
+    </edge>
+    <edge source="saas_provider_1" target="enterprise_retail_co_17">
+      <data key="d4">0.7647666058907581</data>
+    </edge>
+    <edge source="saas_provider_1" target="enterprise_technology_co_18">
+      <data key="d4">0.765725416130955</data>
+    </edge>
+    <edge source="saas_provider_1" target="enterprise_financial_services_co_19">
+      <data key="d4">0.7889437402385802</data>
+    </edge>
+    <edge source="saas_provider_1" target="enterprise_technology_co_20">
+      <data key="d4">0.5609248410852674</data>
+    </edge>
     <edge source="saas_provider_2" target="enterprise_technology_co_1">
       <data key="d4">0.7732195812969819</data>
     </edge>
@@ -156,6 +237,18 @@
     <edge source="saas_provider_2" target="enterprise_healthcare_co_7">
       <data key="d4">0.6549913516120698</data>
     </edge>
+    <edge source="saas_provider_2" target="enterprise_retail_co_11">
+      <data key="d4">0.7673611847161887</data>
+    </edge>
+    <edge source="saas_provider_2" target="enterprise_financial_services_co_12">
+      <data key="d4">0.7538873280002363</data>
+    </edge>
+    <edge source="saas_provider_2" target="enterprise_healthcare_co_15">
+      <data key="d4">0.6634114574898544</data>
+    </edge>
+    <edge source="saas_provider_2" target="enterprise_technology_co_20">
+      <data key="d4">0.7785281500310944</data>
+    </edge>
     <edge source="saas_provider_3" target="enterprise_technology_co_1">
       <data key="d4">0.5175215063148915</data>
     </edge>
@@ -164,6 +257,21 @@
     </edge>
     <edge source="saas_provider_3" target="enterprise_technology_co_10">
       <data key="d4">0.8122916124087871</data>
+    </edge>
+    <edge source="saas_provider_3" target="enterprise_retail_co_11">
+      <data key="d4">0.5458120294143893</data>
+    </edge>
+    <edge source="saas_provider_3" target="enterprise_healthcare_co_14">
+      <data key="d4">0.5123271338271758</data>
+    </edge>
+    <edge source="saas_provider_3" target="enterprise_retail_co_17">
+      <data key="d4">0.6174375031066734</data>
+    </edge>
+    <edge source="saas_provider_3" target="enterprise_technology_co_18">
+      <data key="d4">0.825608153866414</data>
+    </edge>
+    <edge source="saas_provider_3" target="enterprise_technology_co_20">
+      <data key="d4">0.7004179100413455</data>
     </edge>
     <edge source="saas_provider_4" target="enterprise_technology_co_1">
       <data key="d4">0.5617157968270191</data>
@@ -182,6 +290,18 @@
     </edge>
     <edge source="saas_provider_4" target="enterprise_technology_co_10">
       <data key="d4">0.683566310215336</data>
+    </edge>
+    <edge source="saas_provider_4" target="enterprise_financial_services_co_12">
+      <data key="d4">0.7214317602631983</data>
+    </edge>
+    <edge source="saas_provider_4" target="enterprise_healthcare_co_15">
+      <data key="d4">0.8413612293072665</data>
+    </edge>
+    <edge source="saas_provider_4" target="enterprise_technology_co_18">
+      <data key="d4">0.6625547445760283</data>
+    </edge>
+    <edge source="saas_provider_4" target="enterprise_financial_services_co_19">
+      <data key="d4">0.5360191443102567</data>
     </edge>
   </graph>
 </graphml>

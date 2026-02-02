@@ -356,7 +356,7 @@ class ScenarioGenerator:
             },
         )
     
-    def get_all_scenarios(self, include_known_knowns: bool = False, include_known_unks: bool = False, include_dark: bool = False) -> list[Scenario]:
+    def get_all_scenarios(self, include_known_knowns: bool = True, include_known_unks: bool = True, include_dark: bool = True) -> list[Scenario]:
         scenarios = self.get_predefined_scenarios()
         if include_dark:
             scenarios.append(self.get_dark_scenario())
